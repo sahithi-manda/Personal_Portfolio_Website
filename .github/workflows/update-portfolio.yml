@@ -1,0 +1,30 @@
+name: Auto Sync Portfolio
+
+on:
+  schedule:
+    # Run once every 24 hours at midnight UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+    # Allows manual trigger anytime from GitHub Actions tab
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Project
+        env:
+          VITE_GITHUB_USERNAME: ${{ secrets.VITE_GITHUB_USERNAME || 'sahithi-manda' }}
+        run: npm run build

@@ -59,7 +59,7 @@ const SkillCategoryCard = ({ group }: SkillCategoryCardProps) => {
       onMouseMove={handleMouseMove}
       className="glow-card glass-panel p-6 md:p-8 rounded-xl relative overflow-hidden"
     >
-      <h4 className="text-lg font-bold text-white uppercase tracking-wider mb-6 border-b border-white/5 pb-3">
+      <h4 className="text-base font-bold text-white uppercase tracking-wider mb-5 border-b border-slate-700/80 pb-3">
         {group.category}
       </h4>
       <motion.div
@@ -74,7 +74,7 @@ const SkillCategoryCard = ({ group }: SkillCategoryCardProps) => {
             key={skill}
             variants={itemVariants}
             whileHover={{ scale: 1.05 }}
-            className="px-4 py-2 text-sm font-medium text-white/90 bg-white/5 border border-white/10 rounded-full hover:border-accentBlue/50 hover:bg-accentBlue/5 transition-all select-none duration-200 cursor-default"
+            className="px-4 py-2 text-sm font-medium text-slate-200 bg-slate-800/80 border border-slate-700/80 rounded-full hover:border-sky-400/60 hover:bg-sky-500/10 hover:text-sky-300 transition-all select-none duration-200 cursor-default shadow-xs"
           >
             {skill}
           </motion.div>
@@ -95,8 +95,8 @@ export const Skills = () => {
           viewport={{ once: true }}
           className="flex items-center gap-2 mb-3"
         >
-          <span className="h-[1px] w-6 bg-accentPurple" />
-          <span className="text-xs uppercase tracking-widest text-accentPurple font-bold">Tech Stack</span>
+          <span className="h-[1.5px] w-6 bg-violet-400" />
+          <span className="text-xs uppercase tracking-widest text-violet-400 font-bold">Tech Stack</span>
         </motion.div>
         <motion.h3
           initial={{ opacity: 0, y: 25 }}
@@ -119,9 +119,9 @@ export const Skills = () => {
         </div>
 
         {/* Right Side: Interactive 3D Spinning Tag Cloud */}
-        <div className="lg:col-span-5 flex flex-col items-center justify-center order-1 lg:order-2 bg-white/[0.01] border border-white/5 rounded-2xl p-6 hologram-panel accent-glow-purple">
-          <h4 className="text-sm font-semibold uppercase tracking-widest text-accentBlue mb-2">Interactive Orbit</h4>
-          <p className="text-xs text-textMuted/70 mb-2 text-center">Move cursor to shift spin direction & hover tags</p>
+        <div className="lg:col-span-5 flex flex-col items-center justify-center order-1 lg:order-2 glass-panel rounded-2xl p-6 shadow-md border border-slate-700/80">
+          <h4 className="text-sm font-semibold uppercase tracking-widest text-sky-400 mb-2">Interactive Orbit</h4>
+          <p className="text-xs text-slate-400 mb-2 text-center">Move cursor to shift spin direction & hover tags</p>
           <SkillsSphere3D />
         </div>
       </div>

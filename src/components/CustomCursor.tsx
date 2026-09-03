@@ -8,9 +8,9 @@ export const CustomCursor: React.FC = () => {
   const mouseX = useMotionValue(-100);
   const mouseY = useMotionValue(-100);
 
-  // Smooth trail spring configuration
-  const ringX = useSpring(mouseX, { stiffness: 220, damping: 28 });
-  const ringY = useSpring(mouseY, { stiffness: 220, damping: 28 });
+  // Snappy responsive spring configuration (zero perceived mouse latency)
+  const ringX = useSpring(mouseX, { stiffness: 450, damping: 32 });
+  const ringY = useSpring(mouseY, { stiffness: 450, damping: 32 });
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -27,29 +27,21 @@ export const CustomCursor: React.FC = () => {
       setIsVisible(true);
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
     document.addEventListener('mouseleave', handleMouseLeaveWindow);
     document.addEventListener('mouseenter', handleMouseEnterWindow);
 
-    // Dynamic hover styles for interactive elements
+    // Optimized hover styles for interactive elements
     const handleMouseOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (
-        target.tagName === 'A' ||
-        target.tagName === 'BUTTON' ||
-        target.closest('a') ||
-        target.closest('button') ||
-        target.closest('.glow-card') ||
-        target.closest('canvas') ||
-        target.classList.contains('cursor-pointer')
-      ) {
-        setIsHovered(true);
-      } else {
-        setIsHovered(false);
-      }
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+      const interactive = !!(
+        target.closest('a, button, [role="button"], canvas, .glow-card, .cursor-pointer')
+      );
+      setIsHovered(interactive);
     };
 
-    window.addEventListener('mouseover', handleMouseOver);
+    window.addEventListener('mouseover', handleMouseOver, { passive: true });
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
@@ -67,7 +59,7 @@ export const CustomCursor: React.FC = () => {
       }
     };
     checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
+    window.addEventListener('resize', checkScreenSize, { passive: true });
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
@@ -83,9 +75,9 @@ export const CustomCursor: React.FC = () => {
           translateX: '-50%',
           translateY: '-50%',
         }}
-        className="fixed top-0 left-0 w-1.5 h-1.5 bg-white rounded-full z-[9999] pointer-events-none mix-blend-difference"
+        className="fixed top-0 left-0 w-1.5 h-1.5 bg-sky-400 rounded-full z-[9999] pointer-events-none shadow-[0_0_8px_rgba(56,189,248,0.8)]"
       />
-      {/* Soft Spring Outer Trailing Ring */}
+      {/* Soft Spring Outer Trailing Ring - GPU scale transform */}
       <motion.div
         style={{
           x: ringX,
@@ -94,13 +86,12 @@ export const CustomCursor: React.FC = () => {
           translateY: '-50%',
         }}
         animate={{
-          width: isHovered ? 48 : 24,
-          height: isHovered ? 48 : 24,
-          borderColor: isHovered ? 'rgba(255, 255, 255, 0.8)' : 'rgba(255, 255, 255, 0.3)',
-          backgroundColor: isHovered ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0)',
+          scale: isHovered ? 1.7 : 1,
+          borderColor: isHovered ? 'rgba(56, 189, 248, 0.9)' : 'rgba(248, 250, 252, 0.4)',
+          backgroundColor: isHovered ? 'rgba(56, 189, 248, 0.15)' : 'rgba(56, 189, 248, 0)',
         }}
-        transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-        className="fixed top-0 left-0 border border-white rounded-full z-[9998] pointer-events-none mix-blend-difference"
+        transition={{ duration: 0.18, ease: 'easeOut' }}
+        className="fixed top-0 left-0 w-6 h-6 border rounded-full z-[9998] pointer-events-none will-change-transform shadow-xs"
       />
     </>
   );

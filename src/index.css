@@ -3,12 +3,12 @@
 @import "tailwindcss";
 
 @theme {
-  --color-darkBg: #0A0A0A;
-  --color-darkCard: #111827;
-  --color-accentBlue: #60A5FA;
-  --color-accentPurple: #A78BFA;
-  --color-textWhite: #FFFFFF;
-  --color-textMuted: #9CA3AF;
+  --color-darkBg: #0F172A;
+  --color-darkCard: #1E293B;
+  --color-accentBlue: #38BDF8;
+  --color-accentPurple: #818CF8;
+  --color-textWhite: #F8FAFC;
+  --color-textMuted: #94A3B8;
   
   --font-sans: 'Inter', 'Outfit', sans-serif;
   
@@ -17,39 +17,42 @@
 
 /* Base Styles */
 html {
-  scroll-behavior: smooth;
-  background-color: #0A0A0A;
+  background-color: #0F172A;
   font-family: 'Inter', sans-serif;
 }
 
 body {
-  @apply text-textMuted antialiased overflow-x-hidden;
-  background-color: #0A0A0A;
+  @apply text-slate-300 antialiased overflow-x-hidden;
+  background-color: #0F172A;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Outfit', sans-serif;
-  @apply text-textWhite;
+  @apply text-slate-100;
 }
 
 /* Background Grid Overlay */
 .grid-bg {
   background-size: 64px 64px;
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.012) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.012) 1px, transparent 1px);
+    linear-gradient(to right, rgba(56, 189, 248, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(56, 189, 248, 0.04) 1px, transparent 1px);
   mask-image: radial-gradient(circle at 50% 35%, black 40%, transparent 95%);
   -webkit-mask-image: radial-gradient(circle at 50% 35%, black 40%, transparent 95%);
+  transform: translate3d(0, 0, 0);
+  pointer-events: none;
 }
 
 /* Tactile SVG Noise Filter Overlay */
 .noise-bg {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  transform: translate3d(0, 0, 0);
+  pointer-events: none;
 }
 
-/* Premium Metallic Typography Gradients */
+/* Premium Silver-White Typography Gradients */
 .metallic-text {
-  @apply text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/45;
+  @apply text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-slate-400;
 }
 
 /* Custom Scrollbar */
@@ -57,32 +60,34 @@ h1, h2, h3, h4, h5, h6 {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #0A0A0A;
+  background: #0F172A;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1F2937;
+  background: #334155;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #374151;
+  background: #475569;
 }
 
-/* Glassmorphism panels */
+/* Glassmorphism panels - Frosted Slate Navy */
 .glass-panel {
-  background: rgba(17, 24, 39, 0.35);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(30, 41, 59, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .glass-panel-hover {
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+  will-change: transform;
 }
 
 .glass-panel-hover:hover {
-  background: rgba(17, 24, 39, 0.55);
-  border-color: rgba(96, 165, 250, 0.2);
-  box-shadow: 0 20px 40px -15px rgba(96, 165, 250, 0.08), 0 1px 1px 0 rgba(255, 255, 255, 0.03) inset;
+  background: rgba(30, 41, 59, 0.90);
+  border-color: rgba(56, 189, 248, 0.45);
+  box-shadow: 0 20px 35px -10px rgba(56, 189, 248, 0.18), 0 0 1px 1px rgba(56, 189, 248, 0.2) inset;
   transform: translateY(-3px);
 }
 
@@ -97,14 +102,15 @@ h1, h2, h3, h4, h5, h6 {
   position: absolute;
   top: var(--mouse-y, 0px);
   left: var(--mouse-x, 0px);
-  width: 320px;
-  height: 320px;
-  background: radial-gradient(circle, rgba(96, 165, 250, 0.12) 0%, rgba(167, 139, 250, 0.06) 45%, transparent 80%);
-  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, rgba(129, 140, 248, 0.05) 50%, transparent 80%);
+  transform: translate3d(-50%, -50%, 0);
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.3s ease;
   z-index: 0;
+  will-change: transform, opacity;
 }
 
 .glow-card:hover::before {
@@ -118,45 +124,48 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Glowing text and buttons */
 .glow-text {
-  text-shadow: 0 0 15px rgba(96, 165, 250, 0.25);
+  text-shadow: 0 0 15px rgba(56, 189, 248, 0.35);
 }
 
 .accent-glow-purple {
-  box-shadow: 0 0 45px -5px rgba(167, 139, 250, 0.12);
+  box-shadow: 0 0 30px -5px rgba(129, 140, 248, 0.20);
 }
 
 .accent-glow-blue {
-  box-shadow: 0 0 45px -5px rgba(96, 165, 250, 0.12);
+  box-shadow: 0 0 30px -5px rgba(56, 189, 248, 0.20);
 }
 
-/* Custom Floating Animations for Colorful Mesh Gradients */
+/* Custom Hardware-Accelerated Floating Animations */
 @keyframes float-slow-1 {
-  0%, 100% { transform: translate(0px, 0px) scale(1); }
-  33% { transform: translate(50px, -70px) scale(1.15); }
-  66% { transform: translate(-30px, 30px) scale(0.9); }
+  0%, 100% { transform: translate3d(0px, 0px, 0) scale(1); }
+  33% { transform: translate3d(40px, -50px, 0) scale(1.1); }
+  66% { transform: translate3d(-25px, 25px, 0) scale(0.92); }
 }
 
 @keyframes float-slow-2 {
-  0%, 100% { transform: translate(0px, 0px) scale(1.05); }
-  50% { transform: translate(-60px, 50px) scale(0.95); }
+  0%, 100% { transform: translate3d(0px, 0px, 0) scale(1.04); }
+  50% { transform: translate3d(-50px, 40px, 0) scale(0.96); }
 }
 
 @keyframes float-slow-3 {
-  0%, 100% { transform: translate(0px, 0px) scale(0.95); }
-  40% { transform: translate(70px, 40px) scale(1.1); }
-  70% { transform: translate(-40px, -40px) scale(0.85); }
+  0%, 100% { transform: translate3d(0px, 0px, 0) scale(0.96); }
+  40% { transform: translate3d(50px, 30px, 0) scale(1.08); }
+  70% { transform: translate3d(-30px, -30px, 0) scale(0.9); }
 }
 
 .animate-float-1 {
-  animation: float-slow-1 25s ease-in-out infinite;
+  animation: float-slow-1 22s ease-in-out infinite;
+  will-change: transform;
 }
 
 .animate-float-2 {
-  animation: float-slow-2 30s ease-in-out infinite;
+  animation: float-slow-2 26s ease-in-out infinite;
+  will-change: transform;
 }
 
 .animate-float-3 {
-  animation: float-slow-3 28s ease-in-out infinite;
+  animation: float-slow-3 24s ease-in-out infinite;
+  will-change: transform;
 }
 
 /* Custom Cursor & 3D Redesign Utilities */

@@ -17,10 +17,10 @@ const StatCard = ({ number, label }: StatCardProps) => {
         onMouseMove={handleMouseMove}
         className="glow-card glass-panel glass-panel-hover p-6 rounded-xl text-center relative overflow-hidden flex flex-col justify-center items-center h-full"
       >
-        <div className="text-3xl md:text-4xl font-extrabold text-transparent bg-gradient-to-r from-accentBlue to-accentPurple bg-clip-text mb-2 select-none">
+        <div className="text-3xl md:text-4xl font-extrabold text-transparent bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text mb-1.5 select-none">
           {number}
         </div>
-        <div className="text-sm text-textMuted font-medium uppercase tracking-wider">
+        <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider">
           {label}
         </div>
       </div>
@@ -42,8 +42,8 @@ export const About = () => {
             transition={{ duration: 0.6 }}
             className="flex items-center gap-2"
           >
-            <span className="h-[1px] w-8 bg-accentBlue" />
-            <span className="text-xs uppercase tracking-widest text-accentBlue font-bold">About Me</span>
+            <span className="h-[1.5px] w-8 bg-sky-400" />
+            <span className="text-xs uppercase tracking-widest text-sky-400 font-bold">About Me</span>
           </motion.div>
 
           <motion.h3
@@ -51,10 +51,10 @@ export const About = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.8, delay: 0.1 }}
-            className="text-2xl md:text-3xl font-normal leading-relaxed text-white tracking-wide"
+            className="text-2xl md:text-3xl font-normal leading-relaxed text-slate-100 tracking-wide"
           >
             B.Tech CSE (Artificial Intelligence and Machine Learning) student at{' '}
-            <span className="text-transparent bg-gradient-to-r from-accentBlue to-accentPurple bg-clip-text font-semibold">
+            <span className="text-transparent bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text font-bold">
               Sreyas Institute of Technology and Engineering
             </span>{' '}
             with hands-on experience in machine learning, computer vision, data analysis, and AI application development through internships and practical projects.

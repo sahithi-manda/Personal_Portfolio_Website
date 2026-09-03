@@ -60,9 +60,21 @@ export const Hero = () => {
 
   return (
     <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden px-6 pt-20">
-      {/* Floating Ambient Light Orbs */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-accentBlue/10 blur-[120px] mix-blend-screen animate-pulse-slow" />
-      <div className="absolute bottom-1/4 right-1/4 w-[450px] h-[450px] rounded-full bg-accentPurple/10 blur-[140px] mix-blend-screen animate-pulse-slow" style={{ animationDelay: '2s' }} />
+      {/* Floating Ambient Light Orbs - GPU Optimized */}
+      <div
+        className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle, rgba(96, 165, 250, 0.12) 0%, transparent 70%)',
+          transform: 'translate3d(0, 0, 0)',
+        }}
+      />
+      <div
+        className="absolute bottom-1/4 right-1/4 w-[420px] h-[420px] rounded-full pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle, rgba(167, 139, 250, 0.12) 0%, transparent 70%)',
+          transform: 'translate3d(0, 0, 0)',
+        }}
+      />
 
       <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10 w-full pt-12 lg:pt-0">
         {/* Left Column: Typography and Action Links */}
@@ -72,9 +84,9 @@ export const Hero = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-accentBlue mb-8"
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-950/70 border border-sky-500/30 text-xs font-semibold text-sky-300 shadow-sm mb-8"
           >
-            <span className="w-2 h-2 rounded-full bg-accentBlue animate-ping" />
+            <span className="w-2 h-2 rounded-full bg-sky-400 animate-ping" />
             <span>Available for Internships & Projects</span>
           </motion.div>
 
@@ -93,7 +105,7 @@ export const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="text-lg md:text-2xl font-medium text-white mb-4 tracking-wide"
+            className="text-lg md:text-2xl font-medium text-slate-300 mb-4 tracking-wide"
           >
             Building Intelligent Systems with AI & Machine Learning
           </motion.h2>
@@ -103,10 +115,10 @@ export const Hero = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="h-10 text-base md:text-lg font-mono text-accentBlue font-semibold flex items-center gap-1 mb-10"
+            className="h-10 text-base md:text-lg font-mono text-sky-400 font-semibold flex items-center gap-1 mb-10"
           >
             <span>{currentText}</span>
-            <span className="w-[3px] h-5 bg-accentPurple animate-pulse" />
+            <span className="w-[3px] h-5 bg-violet-400 animate-pulse" />
           </motion.div>
 
           {/* Buttons / Actions */}
@@ -120,7 +132,7 @@ export const Hero = () => {
             <a
               href="#projects"
               onClick={scrollToProjects}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-lg font-medium text-sm text-black bg-white hover:bg-neutral-200 transition-colors flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-xl font-semibold text-sm text-slate-950 bg-gradient-to-r from-sky-400 to-blue-500 hover:from-sky-300 hover:to-blue-400 shadow-lg shadow-sky-500/20 hover:shadow-sky-500/30 transition-all flex items-center justify-center gap-2"
             >
               View Projects
               <FiArrowRight size={16} />
@@ -130,7 +142,7 @@ export const Hero = () => {
             <a
               href="/Sahithi_Reddy_resume.pdf"
               download="Sahithi_Reddy_resume.pdf"
-              className="w-full sm:w-auto px-8 py-3.5 rounded-lg font-medium text-sm text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-colors flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-xl font-semibold text-sm text-slate-200 bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/80 hover:border-slate-600 transition-all flex items-center justify-center gap-2 shadow-sm"
             >
               <FaFileDownload size={15} />
               Download Resume
@@ -142,7 +154,7 @@ export const Hero = () => {
                 href="https://github.com/sahithi-manda"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-3.5 rounded-lg text-textMuted hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all"
+                className="p-3.5 rounded-xl text-slate-400 hover:text-white bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/80 transition-all shadow-sm"
                 aria-label="GitHub Profile"
               >
                 <FaGithub size={18} />
@@ -151,7 +163,7 @@ export const Hero = () => {
                 href="https://www.linkedin.com/in/sahithi-reddy-manda-0a218732b"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-3.5 rounded-lg text-textMuted hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all"
+                className="p-3.5 rounded-xl text-slate-400 hover:text-white bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/80 transition-all shadow-sm"
                 aria-label="LinkedIn Profile"
               >
                 <FaLinkedin size={18} />

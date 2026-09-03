@@ -181,24 +181,17 @@ export const SkillsSphere3D: React.FC = () => {
           foundHover = true;
         }
 
-        // Draw shadow glow for tags that are close to front
-        if (scale > 1.0) {
-          ctx.shadowBlur = 10 * scale;
-          ctx.shadowColor = isHovered ? 'rgba(96, 165, 250, 0.4)' : 'rgba(167, 139, 250, 0.15)';
-        } else {
-          ctx.shadowBlur = 0;
-        }
-
-        // Text color transition based on hover and depth
+        // Text color transition based on hover and depth (Silver White to Sky Cyan on Midnight Slate)
         if (isHovered) {
-          ctx.fillStyle = `rgba(96, 165, 250, ${opacity})`; // Highlight Cyan/Blue
+          ctx.fillStyle = 'rgba(56, 189, 248, 1)'; // Electric Sky Cyan
         } else {
-          // Fade color to purple gradient style
           const blendVal = Math.min(1, Math.max(0, (tag.z + radius) / (2 * radius)));
-          const r = Math.round(96 + (167 - 96) * blendVal);
-          const g = Math.round(165 + (139 - 165) * blendVal);
-          const b = Math.round(250 + (250 - 250) * blendVal);
-          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+          // Blend between cool slate (148, 163, 184) in back to crisp white (248, 250, 252) in front
+          const r = Math.round(148 + (248 - 148) * blendVal);
+          const g = Math.round(163 + (250 - 163) * blendVal);
+          const b = Math.round(184 + (252 - 184) * blendVal);
+          const effectiveOpacity = Math.max(0.3, opacity);
+          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${effectiveOpacity})`;
         }
 
         ctx.textAlign = 'center';
@@ -215,10 +208,26 @@ export const SkillsSphere3D: React.FC = () => {
       animationId = requestAnimationFrame(updateAndDraw);
     };
 
-    updateAndDraw();
+    let isSphereVisible = true;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isSphereVisible = entry.isIntersecting;
+        if (isSphereVisible && !animationId) {
+          animationId = requestAnimationFrame(updateAndDraw);
+        } else if (!isSphereVisible && animationId) {
+          cancelAnimationFrame(animationId);
+          animationId = 0;
+        }
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(container);
+
+    animationId = requestAnimationFrame(updateAndDraw);
 
     return () => {
-      cancelAnimationFrame(animationId);
+      observer.disconnect();
+      if (animationId) cancelAnimationFrame(animationId);
       canvas.removeEventListener('mousemove', onMouseMove);
       canvas.removeEventListener('mouseleave', onMouseLeave);
       window.removeEventListener('resize', handleResize);

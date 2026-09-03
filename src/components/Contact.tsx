@@ -24,9 +24,9 @@ export const Contact = () => {
           viewport={{ once: true }}
           className="flex items-center gap-2 mb-3"
         >
-          <span className="h-[1px] w-6 bg-accentPurple" />
-          <span className="text-xs uppercase tracking-widest text-accentPurple font-bold">Connect</span>
-          <span className="h-[1px] w-6 bg-accentPurple" />
+          <span className="h-[1.5px] w-6 bg-violet-400" />
+          <span className="text-xs uppercase tracking-widest text-violet-400 font-bold">Connect</span>
+          <span className="h-[1.5px] w-6 bg-violet-400" />
         </motion.div>
         <motion.h3
           initial={{ opacity: 0, y: 25 }}
@@ -47,26 +47,26 @@ export const Contact = () => {
         transition={{ duration: 0.8, ease: 'easeOut' }}
         ref={containerRef}
         onMouseMove={handleMouseMove}
-        className="glow-card glass-panel p-8 md:p-12 rounded-2xl relative overflow-hidden flex flex-col items-center text-center"
+        className="glow-card glass-panel p-8 md:p-12 rounded-2xl relative overflow-hidden flex flex-col items-center text-center shadow-sm"
       >
-        <p className="text-base md:text-lg text-textMuted max-w-xl leading-relaxed mb-8 font-medium">
+        <p className="text-base md:text-lg text-slate-300 max-w-xl leading-relaxed mb-8 font-normal">
           Interested in internship opportunities, project collaborations, or discussing AI/ML systems? Drop me an email or connect on social platforms!
         </p>
 
         {/* Email Copy Card */}
-        <div className="flex flex-col sm:flex-row items-center gap-4 bg-white/5 border border-white/10 rounded-xl p-3 pl-5 mb-10 w-full max-w-md justify-between">
+        <div className="flex flex-col sm:flex-row items-center gap-4 bg-slate-900/90 border border-slate-700/80 rounded-xl p-3 pl-5 mb-10 w-full max-w-md justify-between shadow-xs">
           <div className="flex items-center gap-3">
-            <FaEnvelope className="text-accentBlue" size={18} />
-            <span className="text-white font-mono text-sm md:text-base select-all">{email}</span>
+            <FaEnvelope className="text-sky-400" size={18} />
+            <span className="text-slate-100 font-mono text-sm md:text-base select-all font-semibold">{email}</span>
           </div>
           <button
             onClick={copyEmail}
-            className="w-full sm:w-auto px-4 py-2 rounded-lg text-xs font-semibold text-white bg-white/10 hover:bg-white/15 border border-white/10 transition-colors flex items-center justify-center gap-2 select-none active:scale-95"
+            className="w-full sm:w-auto px-4 py-2 rounded-lg text-xs font-semibold text-slate-200 bg-slate-800 hover:bg-slate-700 border border-slate-700 shadow-xs transition-colors flex items-center justify-center gap-2 select-none active:scale-95"
           >
             {copied ? (
               <>
                 <FaCheck className="text-emerald-400" size={12} />
-                <span className="text-emerald-400">Copied!</span>
+                <span className="text-emerald-400 font-bold">Copied!</span>
               </>
             ) : (
               <>
@@ -85,10 +85,10 @@ export const Contact = () => {
             rel="noopener noreferrer"
             className="group flex flex-col items-center gap-2"
           >
-            <div className="p-4 rounded-full bg-white/5 border border-white/10 text-textMuted group-hover:text-white group-hover:border-accentBlue group-hover:bg-accentBlue/10 transition-all duration-300">
+            <div className="p-4 rounded-full bg-slate-800/80 border border-slate-700/80 text-slate-400 group-hover:text-sky-400 group-hover:border-sky-400 group-hover:bg-sky-500/10 transition-all duration-300 shadow-xs">
               <FaGithub size={24} />
             </div>
-            <span className="text-xs font-semibold text-textMuted group-hover:text-white transition-colors">GitHub</span>
+            <span className="text-xs font-semibold text-slate-400 group-hover:text-white transition-colors">GitHub</span>
           </a>
 
           <a
@@ -97,10 +97,10 @@ export const Contact = () => {
             rel="noopener noreferrer"
             className="group flex flex-col items-center gap-2"
           >
-            <div className="p-4 rounded-full bg-white/5 border border-white/10 text-textMuted group-hover:text-white group-hover:border-accentPurple group-hover:bg-accentPurple/10 transition-all duration-300">
+            <div className="p-4 rounded-full bg-slate-800/80 border border-slate-700/80 text-slate-400 group-hover:text-violet-400 group-hover:border-violet-400 group-hover:bg-violet-500/10 transition-all duration-300 shadow-xs">
               <FaLinkedin size={24} />
             </div>
-            <span className="text-xs font-semibold text-textMuted group-hover:text-white transition-colors">LinkedIn</span>
+            <span className="text-xs font-semibold text-slate-400 group-hover:text-white transition-colors">LinkedIn</span>
           </a>
         </div>
       </motion.div>

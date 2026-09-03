@@ -65,25 +65,25 @@ export const HeroCanvas3D: React.FC = () => {
     // Circular particle texture
     const createParticleTexture = () => {
       const canvas = document.createElement('canvas');
-      canvas.width = 16;
-      canvas.height = 16;
+      canvas.width = 32;
+      canvas.height = 32;
       const ctx = canvas.getContext('2d');
       if (ctx) {
-        const gradient = ctx.createRadialGradient(8, 8, 0, 8, 8, 8);
+        const gradient = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
         gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-        gradient.addColorStop(0.2, 'rgba(96, 165, 250, 0.8)');
-        gradient.addColorStop(0.5, 'rgba(167, 139, 250, 0.4)');
+        gradient.addColorStop(0.25, 'rgba(56, 189, 248, 0.95)');
+        gradient.addColorStop(0.65, 'rgba(129, 140, 248, 0.45)');
         gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
         ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, 16, 16);
+        ctx.fillRect(0, 0, 32, 32);
       }
       return new THREE.CanvasTexture(canvas);
     };
 
     const material = new THREE.PointsMaterial({
-      size: 0.13,
+      size: 0.14,
       transparent: true,
-      opacity: 0.85,
+      opacity: 0.9,
       map: createParticleTexture(),
       depthWrite: false,
       blending: THREE.AdditiveBlending,
@@ -94,9 +94,9 @@ export const HeroCanvas3D: React.FC = () => {
 
     // Dynamic Line Connections (Neural Net)
     const lineMaterial = new THREE.LineBasicMaterial({
-      color: 0x8b5cf6, // Violet accent
+      color: 0x38bdf8, // Electric Sky Cyan Accent
       transparent: true,
-      opacity: 0.12,
+      opacity: 0.22,
       blending: THREE.AdditiveBlending,
     });
 
@@ -107,13 +107,17 @@ export const HeroCanvas3D: React.FC = () => {
     const lineSegments = new THREE.LineSegments(lineGeometry, lineMaterial);
     globeGroup.add(lineSegments);
 
+    let lineFrameCount = 0;
     const updateLines = () => {
+      lineFrameCount++;
+      if (lineFrameCount % 2 !== 0) return;
+
       const posArray = geometry.attributes.position.array as Float32Array;
       const linePosAttr = lineGeometry.attributes.position;
       const lineArray = linePosAttr.array as Float32Array;
       let vertexCount = 0;
       
-      const thresholdSq = 1.6 * 1.6;
+      const thresholdSq = 1.4 * 1.4;
 
       // Find pairs close to each other
       for (let i = 0; i < particlesCount; i++) {
@@ -121,16 +125,20 @@ export const HeroCanvas3D: React.FC = () => {
         const y1 = posArray[i * 3 + 1];
         const z1 = posArray[i * 3 + 2];
 
-        // Only check a subset of points for performance
+        // Check subset of points
         for (let j = i + 1; j < particlesCount; j++) {
-          if (j % 3 !== 0) continue;
+          if (j % 4 !== 0) continue;
           if (vertexCount / 2 >= maxLines) break;
 
           const x2 = posArray[j * 3];
           const y2 = posArray[j * 3 + 1];
           const z2 = posArray[j * 3 + 2];
 
-          const distSq = (x1 - x2) ** 2 + (y1 - y2) ** 2 + (z1 - z2) ** 2;
+          const dx = x1 - x2;
+          const dy = y1 - y2;
+          const dz = z1 - z2;
+          const distSq = dx * dx + dy * dy + dz * dz;
+
           if (distSq < thresholdSq) {
             const idx = vertexCount * 3;
             lineArray[idx] = x1;
@@ -153,12 +161,12 @@ export const HeroCanvas3D: React.FC = () => {
     const ringGroup = new THREE.Group();
     globeGroup.add(ringGroup);
 
-    // Inner glowing sphere core representing "the AI center"
+    // Inner glowing sphere core
     const coreGeom = new THREE.SphereGeometry(0.5, 16, 16);
     const coreMat = new THREE.MeshBasicMaterial({
-      color: 0x60a5fa,
+      color: 0x38bdf8,
       transparent: true,
-      opacity: 0.25,
+      opacity: 0.22,
       blending: THREE.AdditiveBlending,
     });
     const core = new THREE.Mesh(coreGeom, coreMat);
@@ -167,10 +175,10 @@ export const HeroCanvas3D: React.FC = () => {
     // Orbit 1: Diagonal
     const ringGeom1 = new THREE.RingGeometry(3.1, 3.12, 64);
     const ringMat1 = new THREE.MeshBasicMaterial({
-      color: 0x60a5fa,
+      color: 0x38bdf8,
       side: THREE.DoubleSide,
       transparent: true,
-      opacity: 0.25,
+      opacity: 0.3,
       blending: THREE.AdditiveBlending,
     });
     const ring1 = new THREE.Mesh(ringGeom1, ringMat1);
@@ -181,10 +189,10 @@ export const HeroCanvas3D: React.FC = () => {
     // Orbit 2: Horizontal
     const ringGeom2 = new THREE.RingGeometry(3.3, 3.32, 64);
     const ringMat2 = new THREE.MeshBasicMaterial({
-      color: 0xa78bfa,
+      color: 0x818cf8,
       side: THREE.DoubleSide,
       transparent: true,
-      opacity: 0.15,
+      opacity: 0.2,
       blending: THREE.AdditiveBlending,
     });
     const ring2 = new THREE.Mesh(ringGeom2, ringMat2);
@@ -255,11 +263,17 @@ export const HeroCanvas3D: React.FC = () => {
 
     window.addEventListener('resize', handleResize);
 
-    // Animation Loop
+    // Animation Loop with Visibility Caching
     const timer = new THREE.Clock();
-    let animationId: number;
+    let animationId: number = 0;
+    let isHeroVisible = true;
 
     const animate = () => {
+      if (!isHeroVisible) {
+        animationId = 0;
+        return;
+      }
+
       const elapsedTime = timer.getElapsedTime();
 
       // Smooth auto tilt towards the cursor
@@ -308,7 +322,6 @@ export const HeroCanvas3D: React.FC = () => {
 
         // Shockwave displacement: push particles outward from center
         if (shockwaveIntensity > 0.01) {
-          // Push vector outward from center (0,0,0)
           const dirX = origX;
           const dirY = origY;
           const dirZ = origZ;
@@ -333,7 +346,7 @@ export const HeroCanvas3D: React.FC = () => {
 
       // Fade out shockwave over time
       if (shockwaveIntensity > 0) {
-        shockwaveIntensity *= 0.94; // Exponential decay
+        shockwaveIntensity *= 0.94;
       }
 
       // Drag inertia decay: slowly halt dragging rotation if user lets go
@@ -346,10 +359,22 @@ export const HeroCanvas3D: React.FC = () => {
       animationId = requestAnimationFrame(animate);
     };
 
-    animate();
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isHeroVisible = entry.isIntersecting;
+        if (isHeroVisible && !animationId) {
+          animationId = requestAnimationFrame(animate);
+        }
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(container);
+
+    animationId = requestAnimationFrame(animate);
 
     return () => {
-      cancelAnimationFrame(animationId);
+      observer.disconnect();
+      if (animationId) cancelAnimationFrame(animationId);
       window.removeEventListener('mousemove', onMouseMove);
       container.removeEventListener('mousedown', onMouseDown);
       window.removeEventListener('mousemove', onMouseMoveDrag);

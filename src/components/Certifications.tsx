@@ -51,10 +51,10 @@ const CertCard: React.FC<CertCardProps> = ({ cert, index }) => {
         <div>
           {/* Header */}
           <div className="flex items-start justify-between gap-4 mb-6">
-            <div className="p-3 bg-accentBlue/10 text-accentBlue rounded-xl border border-accentBlue/20">
+            <div className="p-3 bg-sky-950/70 text-sky-400 rounded-xl border border-sky-500/30">
               <FiAward size={24} />
             </div>
-            <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-mono bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full">
+            <div className="flex items-center gap-1.5 text-xs text-emerald-300 font-mono bg-emerald-950/60 border border-emerald-500/30 px-3 py-1 rounded-full font-medium">
               <FiCheckSquare size={12} />
               <span>Verified Certificate</span>
             </div>
@@ -64,24 +64,24 @@ const CertCard: React.FC<CertCardProps> = ({ cert, index }) => {
           <h4 className="text-xl font-bold text-white mb-1 tracking-tight">
             {cert.title}
           </h4>
-          <p className="text-sm font-semibold text-accentPurple/90 tracking-wide uppercase mb-4">
+          <p className="text-sm font-semibold text-violet-400 tracking-wide uppercase mb-4">
             {cert.issuer}
           </p>
 
-          <p className="text-xs text-textMuted font-mono mb-6 flex items-center gap-1">
+          <p className="text-xs text-slate-400 font-mono mb-6 flex items-center gap-1">
             <span>Issued:</span>
-            <span className="text-white">{cert.date}</span>
+            <span className="text-slate-200 font-semibold">{cert.date}</span>
           </p>
         </div>
 
         {/* Skills Covered */}
-        <div className="border-t border-white/5 pt-4">
-          <p className="text-xs text-textMuted uppercase font-bold tracking-wider mb-3">Key Focus Areas</p>
+        <div className="border-t border-slate-700/80 pt-4">
+          <p className="text-xs text-slate-400 uppercase font-bold tracking-wider mb-3">Key Focus Areas</p>
           <div className="flex flex-wrap gap-2">
             {cert.skills.map((skill) => (
               <span
                 key={skill}
-                className="text-[11px] font-mono px-2 py-0.5 rounded bg-white/5 border border-white/5 text-textMuted"
+                className="text-[11px] font-mono px-2.5 py-1 rounded-md bg-slate-800/80 border border-slate-700/80 text-slate-300 font-medium"
               >
                 {skill}
               </span>
@@ -105,9 +105,9 @@ export const Certifications = () => {
           viewport={{ once: true }}
           className="flex items-center gap-2 mb-3"
         >
-          <span className="h-[1px] w-6 bg-accentBlue" />
-          <span className="text-xs uppercase tracking-widest text-accentBlue font-bold">Credentials</span>
-          <span className="h-[1px] w-6 bg-accentBlue" />
+          <span className="h-[1.5px] w-6 bg-sky-400" />
+          <span className="text-xs uppercase tracking-widest text-sky-400 font-bold">Credentials</span>
+          <span className="h-[1.5px] w-6 bg-sky-400" />
         </motion.div>
         <motion.h3
           initial={{ opacity: 0, y: 25 }}

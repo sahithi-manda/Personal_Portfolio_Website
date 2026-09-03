@@ -23,17 +23,17 @@ export const Background3D: React.FC = () => {
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    // Structured 3D Mesh Grid of Particles
-    const cols = 45;
-    const rows = 30;
+    // Structured 3D Mesh Grid of Particles (Balanced density for maximum smoothness)
+    const cols = 36;
+    const rows = 24;
     const particlesCount = cols * rows;
 
     const positions = new Float32Array(particlesCount * 3);
     const initialPositions = new Float32Array(particlesCount * 3);
     const colors = new Float32Array(particlesCount * 3);
 
-    const colorBlue = new THREE.Color('#60A5FA');
-    const colorPurple = new THREE.Color('#A78BFA');
+    const colorBlue = new THREE.Color('#38BDF8');
+    const colorPurple = new THREE.Color('#818CF8');
 
     let idx = 0;
     for (let c = 0; c < cols; c++) {
@@ -75,8 +75,8 @@ export const Background3D: React.FC = () => {
       if (ctx) {
         const gradient = ctx.createRadialGradient(8, 8, 0, 8, 8, 8);
         gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-        gradient.addColorStop(0.3, 'rgba(255, 255, 255, 0.7)');
-        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        gradient.addColorStop(0.35, 'rgba(56, 189, 248, 0.85)');
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, 16, 16);
       }
@@ -85,10 +85,10 @@ export const Background3D: React.FC = () => {
     };
 
     const material = new THREE.PointsMaterial({
-      size: 0.075,
+      size: 0.08,
       vertexColors: true,
       transparent: true,
-      opacity: 0.45,
+      opacity: 0.38,
       map: createCircleTexture(),
       depthWrite: false,
       blending: THREE.AdditiveBlending,
@@ -98,16 +98,18 @@ export const Background3D: React.FC = () => {
     scene.add(particles);
 
     // Mouse projections on the 3D plane
-    const mouse2D = new THREE.Vector2(-999, -999); // Offscreen initially
+    const mouse2D = new THREE.Vector2(-999, -999);
     const planeZ = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
     const raycaster = new THREE.Raycaster();
+    let mouseMoved = false;
 
     const handleMouseMove = (event: MouseEvent) => {
       mouse2D.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouse2D.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      mouseMoved = true;
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
 
     const handleResize = () => {
       width = window.innerWidth;
@@ -117,39 +119,45 @@ export const Background3D: React.FC = () => {
       camera.updateProjectionMatrix();
 
       renderer.setSize(width, height);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     };
 
     window.addEventListener('resize', handleResize);
 
     const clock = new THREE.Clock();
     let animationFrameId: number;
-    const intersectionPoint = new THREE.Vector3();
+    const intersectionPoint = new THREE.Vector3(-999, -999, 0);
 
     const animate = () => {
+      if (document.hidden) {
+        animationFrameId = requestAnimationFrame(animate);
+        return;
+      }
+
       const elapsedTime = clock.getElapsedTime();
 
-      // Project mouse coordinates onto the z=0 Plane
-      raycaster.setFromCamera(mouse2D, camera);
-      raycaster.ray.intersectPlane(planeZ, intersectionPoint);
+      // Project mouse coordinates onto the z=0 Plane only when moved
+      if (mouseMoved) {
+        raycaster.setFromCamera(mouse2D, camera);
+        raycaster.ray.intersectPlane(planeZ, intersectionPoint);
+        mouseMoved = false;
+      }
 
       const positionsArray = geometry.attributes.position.array as Float32Array;
-      const maxInfluenceDist = 2.2;
+      const maxInfluenceDist = 2.4;
       const maxInfluenceDistSq = maxInfluenceDist * maxInfluenceDist;
 
-      // Update particle grid positions with wavy offsets and mouse repulsion forces
+      // Update particle grid positions
       for (let i = 0; i < particlesCount; i++) {
         const initX = initialPositions[i * 3];
         const initY = initialPositions[i * 3 + 1];
 
-        // Wave formula for baseline height oscillation
-        const waveZ = Math.sin(elapsedTime * 0.9 + initX * 0.35 + initY * 0.25) * 0.35;
+        // Smooth wave formula
+        const waveZ = Math.sin(elapsedTime * 0.8 + initX * 0.3 + initY * 0.2) * 0.32;
 
-        // Distance squared from cursor projected point
         const dx = initX - intersectionPoint.x;
         const dy = initY - intersectionPoint.y;
-        const dz = waveZ - intersectionPoint.z;
-        const distSq = dx * dx + dy * dy + dz * dz;
+        const distSq = dx * dx + dy * dy;
 
         let targetX = initX;
         let targetY = initY;
@@ -157,19 +165,16 @@ export const Background3D: React.FC = () => {
 
         if (distSq < maxInfluenceDistSq) {
           const dist = Math.sqrt(distSq);
-          const force = (maxInfluenceDist - dist) / maxInfluenceDist; // Linear falloff (0 to 1)
+          const force = (maxInfluenceDist - dist) / maxInfluenceDist;
 
-          // Displace coordinates horizontally (repulsion push)
-          const len = Math.sqrt(dx * dx + dy * dy);
-          if (len > 0.0001) {
-            const pushFactor = force * 0.7 / len;
+          if (dist > 0.001) {
+            const pushFactor = force * 0.6 / dist;
             targetX += dx * pushFactor;
             targetY += dy * pushFactor;
           }
-          targetZ += force * 1.6; // Lifting coordinate towards the camera (3D bump)
+          targetZ += force * 1.5;
         }
 
-        // Interpolation (lerp) current position to target coordinate for fluid motion
         const currX = positionsArray[i * 3];
         const currY = positionsArray[i * 3 + 1];
         const currZ = positionsArray[i * 3 + 2];
@@ -181,7 +186,7 @@ export const Background3D: React.FC = () => {
       geometry.attributes.position.needsUpdate = true;
 
       // Subtle scene drift
-      particles.rotation.z = Math.sin(elapsedTime * 0.05) * 0.05;
+      particles.rotation.z = Math.sin(elapsedTime * 0.05) * 0.04;
 
       renderer.render(scene, camera);
       animationFrameId = requestAnimationFrame(animate);

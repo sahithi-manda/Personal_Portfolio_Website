@@ -118,6 +118,60 @@ vercel
 
 Follow the interactive setup prompts. Once successfully linked, build and deploy in production mode by running:
 
-```bash
 vercel --prod
 ```
+
+---
+
+## 🔄 Automatic GitHub Project Synchronization
+
+The portfolio features **automatic GitHub repository discovery and synchronization**. You never need to modify portfolio source code or edit project arrays to display a new project!
+
+### How Synchronization Works
+
+```text
+Create Repository on GitHub
+          ↓
+Push code to GitHub
+          ↓
+Portfolio dynamically detects new repository via GitHub API
+          ↓
+Project appears instantly in the Projects section
+```
+
+### Adding a New Project (Future Workflow)
+
+#### Minimum Effort Workflow (0 Code Changes)
+1. **Create a GitHub repository** under your configured GitHub account (`sahithi-manda`).
+2. **Push your code to GitHub**.
+3. **Done!** The portfolio will automatically detect the repository, format its name, extract description and languages/topics, and display it in the Projects section.
+
+#### Rich Customization Workflow (`portfolio.json`)
+If you want to customize project details, add an optional `portfolio.json` file in the **root** of your repository:
+
+```json
+{
+  "title": "Smart DSA Visualizer",
+  "description": "Interactive data structures and algorithms visualization platform with time-complexity analysis.",
+  "technologies": ["React", "TypeScript", "Tailwind CSS", "Framer Motion"],
+  "featured": true,
+  "displayOrder": 1,
+  "liveUrl": "https://dsa-visualizer-demo.vercel.app",
+  "category": "Algorithm Engineering"
+}
+```
+
+### GitHub Topic Controls (Direct from GitHub)
+
+You can control portfolio project visibility directly on GitHub using **Repository Topics**:
+
+* **Hide a repository**: Add the topic `portfolio-hidden` on GitHub. It will never appear in your portfolio.
+* **Feature a repository**: Add the topic `portfolio-featured` on GitHub. It will be promoted to the top of the Projects section.
+
+### Environment Variables
+
+| Variable | Description | Default |
+| :--- | :--- | :--- |
+| `VITE_GITHUB_USERNAME` | Your GitHub account username | `sahithi-manda` |
+| `VITE_GITHUB_TOKEN` | *(Optional)* Personal access token for 5,000 req/hr rate limits | None |
+
