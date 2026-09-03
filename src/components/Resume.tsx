@@ -58,7 +58,7 @@ export const Resume = () => {
                 </div>
                 <div>
                   <h4 className="text-base font-bold text-white">Education</h4>
-                  <span className="text-xs text-slate-400 font-mono">B.Tech 2022 - 2026</span>
+                  <span className="text-xs text-slate-400 font-mono">B.Tech 2024 - 2028</span>
                 </div>
               </div>
               <p className="text-sm text-slate-200 font-semibold mb-1">
@@ -70,7 +70,7 @@ export const Resume = () => {
             </div>
             <div className="mt-4 pt-3 border-t border-slate-700/60 flex items-center justify-between text-xs text-slate-400">
               <span>Focus Area</span>
-              <span className="text-sky-300 font-mono">AI / ML Core</span>
+              <span className="text-sky-300 font-mono">AI / ML, LLMs & DSA</span>
             </div>
           </div>
         </CardTilt3D>
@@ -85,19 +85,19 @@ export const Resume = () => {
                 </div>
                 <div>
                   <h4 className="text-base font-bold text-white">Industry Experience</h4>
-                  <span className="text-xs text-slate-400 font-mono">2 Completed Internships</span>
+                  <span className="text-xs text-slate-400 font-mono">Active AI/ML Intern</span>
                 </div>
               </div>
               <p className="text-sm text-slate-200 font-semibold mb-1">
-                AI / ML & Data Analytics Intern
+                AI/ML Intern @ IStudio
               </p>
               <p className="text-xs text-slate-400">
-                Labmentix (Feb 2026) & DecodeLabs (July 2024)
+                IStudio (Mar 2026 – Present) & Labmentix (Aug 2025 – Feb 2026)
               </p>
             </div>
             <div className="mt-4 pt-3 border-t border-slate-700/60 flex items-center justify-between text-xs text-slate-400">
-              <span>Key Work</span>
-              <span className="text-violet-300 font-mono">EDA, Vision & Modeling</span>
+              <span>Key Focus</span>
+              <span className="text-violet-300 font-mono">Agents, RAG & Vision</span>
             </div>
           </div>
         </CardTilt3D>
@@ -116,15 +116,15 @@ export const Resume = () => {
                 </div>
               </div>
               <p className="text-sm text-slate-200 font-semibold mb-1">
-                Python, Java, ML & Deep Learning
+                Python, LLMs, RAG & Deep Learning
               </p>
               <p className="text-xs text-slate-400">
-                Scikit-Learn, TensorFlow, OpenCV, Streamlit, Pandas, NumPy
+                Scikit-Learn, TensorFlow, OpenCV, Streamlit, NLP, ANN, PCA, SQLite
               </p>
             </div>
             <div className="mt-4 pt-3 border-t border-slate-700/60 flex items-center justify-between text-xs text-slate-400">
               <span>Practical Work</span>
-              <span className="text-emerald-300 font-mono">15+ AI Projects</span>
+              <span className="text-emerald-300 font-mono">15+ AI/ML Projects</span>
             </div>
           </div>
         </CardTilt3D>

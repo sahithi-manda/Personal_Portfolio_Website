@@ -55,7 +55,7 @@ export const About = () => {
           >
             B.Tech CSE (Artificial Intelligence and Machine Learning) student at{' '}
             <span className="text-transparent bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text font-bold">
-              Sreyas Institute of Technology and Engineering
+              Sreyas Institute of Engineering and Technology
             </span>{' '}
             with hands-on experience in machine learning, computer vision, data analysis, and AI application development through internships and practical projects.
           </motion.h3>

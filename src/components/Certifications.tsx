@@ -13,16 +13,46 @@ interface Certificate {
 
 const certificatesData: Certificate[] = [
   {
-    title: 'Machine Learning Internship Certificate',
-    issuer: 'DecodeLabs',
-    date: 'July 2024',
-    skills: ['Python Data Analysis', 'Machine Learning Models', 'Predictive Analysis'],
+    title: 'Python Essentials 1',
+    issuer: 'Cisco Networking Academy',
+    date: 'Credentialed',
+    skills: ['Python Fundamentals', 'Control Flow', 'Data Collections', 'Logic & Functions'],
+  },
+  {
+    title: 'GenAI Powered Data Analytics Job Simulation',
+    issuer: 'Tata (Forage)',
+    date: 'Credentialed',
+    skills: ['Generative AI', 'Exploratory Data Analysis', 'Business Analytics', 'Data Insights'],
+  },
+  {
+    title: 'Claude 101',
+    issuer: 'Anthropic',
+    date: 'Credentialed',
+    skills: ['Large Language Models (LLMs)', 'Prompt Engineering', 'AI System Interaction'],
+  },
+  {
+    title: 'Microsoft SQL Certification Training',
+    issuer: 'Intellipaat',
+    date: 'Credentialed',
+    skills: ['Database Management', 'Complex SQL Queries', 'Relational Schema', 'SQLite & DBMS'],
+  },
+  {
+    title: 'Introduction to Modern AI',
+    issuer: 'Cisco Networking Academy',
+    date: 'Credentialed',
+    skills: ['Modern AI Principles', 'Machine Learning Basics', 'AI Ethics & Applications'],
   },
   {
     title: 'AI/ML Intern Accomplishment',
     issuer: 'Labmentix',
     date: 'February 2026',
     skills: ['Exploratory Data Analysis (EDA)', 'Data Visualization', 'Insight Engineering'],
+  },
+  {
+    title: 'Machine Learning Internship Certificate',
+    issuer: 'DecodeLabs',
+    date: 'July 2024',
+    skills: ['Python Data Analysis', 'Machine Learning Models', 'Predictive Analysis'],
   },
 ];
 
@@ -96,7 +126,7 @@ const CertCard: React.FC<CertCardProps> = ({ cert, index }) => {
 
 export const Certifications = () => {
   return (
-    <section id="certifications" className="py-24 px-6 max-w-5xl mx-auto">
+    <section id="certifications" className="py-24 px-6 max-w-6xl mx-auto">
       {/* Title */}
       <div className="flex flex-col items-center text-center mb-16">
         <motion.div
@@ -121,7 +151,7 @@ export const Certifications = () => {
       </div>
 
       {/* Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {certificatesData.map((cert, idx) => (
           <CertCard key={cert.title} cert={cert} index={idx} />
         ))}

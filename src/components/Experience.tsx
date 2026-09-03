@@ -89,12 +89,23 @@ export const Experience = () => {
         {/* Timeline Line Container */}
         <div className="relative border-l border-slate-700/80 ml-[9px] md:ml-[9px]">
           <TimelineItem
+            company="IStudio"
+            role="AI/ML Intern"
+            duration="Mar 2026 - Present"
+            responsibilities={[
+              'Assisted in the development and testing of AI/ML solutions, supporting machine learning workflows and experimentation.',
+              'Conducted research on AI Agents, LLMs, and RAG systems; analyzed datasets to identify trends and insights.',
+              'Collaborated with mentors and project teams while contributing to AI research and implementation initiatives.',
+            ]}
+          />
+          <TimelineItem
             company="Labmentix"
             role="AI/ML Intern"
             duration="Aug 2025 - Feb 2026"
             responsibilities={[
-              'Investigated extensive datasets to uncover actionable insights, trends, and patterns.',
-              'Constructed and designed interactive data visualizations to communicate analytical findings effectively.',
+              'Applied machine learning and data analysis concepts to analyze datasets and identify customer behavior trends.',
+              'Structured, cleaned, and transformed data while developing visualizations and reports to communicate analytical insights.',
+              'Collaborated on analytical challenges and delivered insights through reporting and analysis.',
             ]}
           />
           <TimelineItem
@@ -102,7 +113,7 @@ export const Experience = () => {
             role="ML Intern"
             duration="Jun 2024 - Jul 2024"
             responsibilities={[
-              'Completed intensive, hands-on training in Artificial Intelligence and Machine Learning paradigms.',
+              'Completed intensive hands-on training in Artificial Intelligence and Machine Learning paradigms.',
               'Worked with Python, Pandas, and Scikit-Learn libraries for data analysis and core ML model building.',
             ]}
           />
