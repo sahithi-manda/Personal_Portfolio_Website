@@ -108,15 +108,6 @@ export const Experience = () => {
               'Collaborated on analytical challenges and delivered insights through reporting and analysis.',
             ]}
           />
-          <TimelineItem
-            company="DecodeLabs"
-            role="ML Intern"
-            duration="Jun 2024 - Jul 2024"
-            responsibilities={[
-              'Completed intensive hands-on training in Artificial Intelligence and Machine Learning paradigms.',
-              'Worked with Python, Pandas, and Scikit-Learn libraries for data analysis and core ML model building.',
-            ]}
-          />
         </div>
       </div>
     </section>

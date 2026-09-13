@@ -197,7 +197,7 @@ export const Resume = () => {
         {/* Embedded PDF Preview Window */}
         <div className="relative w-full h-[580px] bg-slate-950/60 flex items-center justify-center">
           <iframe
-            src={`${resumeUrl}#view=FitH&toolbar=0`}
+            src={`${resumeUrl}?v=2#view=FitH&toolbar=0`}
             className="w-full h-full border-none"
             title="Sahithi Reddy Resume Preview"
           />
@@ -261,7 +261,7 @@ export const Resume = () => {
               {/* Modal PDF Iframe */}
               <div className="flex-1 w-full h-full bg-slate-950">
                 <iframe
-                  src={`${resumeUrl}#view=FitH`}
+                  src={`${resumeUrl}?v=2#view=FitH`}
                   className="w-full h-full border-none"
                   title="Fullscreen Resume View"
                 />

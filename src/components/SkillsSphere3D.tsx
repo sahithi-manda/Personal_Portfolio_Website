@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 
 const skills = [
-  'Python', 'Java', 'Machine Learning', 'Data Analysis',
-  'Computer Vision', 'NLP', 'Git', 'GitHub', 'Streamlit',
-  'Google Colab', 'Pandas', 'NumPy', 'OpenCV', 'TensorFlow'
+  'Python', 'Machine Learning', 'NLP', 'LLMs',
+  'RAG', 'ANN', 'PCA', 'TensorFlow', 'OpenCV',
+  'Scikit-Learn', 'Streamlit', 'SQLite', 'Pandas',
+  'NumPy', 'Java', 'Git', 'GitHub', 'Matplotlib'
 ];
 
 interface Tag {

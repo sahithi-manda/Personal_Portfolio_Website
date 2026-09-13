@@ -6,12 +6,12 @@ import type { PortfolioProject } from '../types/project';
  */
 export const fallbackProjects: PortfolioProject[] = [
   {
-    id: 'ai-study-planner',
-    title: 'AI-Powered Study Planner',
+    id: 'smart-dsa-visualizer',
+    title: 'Smart DSA Visualizer',
     description:
-      'An intelligent study planning application that creates personalized preparation schedules and custom task recommendations dynamically aligned with user constraints and study targets.',
-    tech: ['Python', 'Streamlit', 'SQLite', 'Pandas'],
-    github: 'https://github.com/sahithi-manda/AI-Study-Planner',
+      'An interactive DSA analysis and visualization system demonstrating the step-by-step execution of algorithms and data structures with complexity analysis.',
+    tech: ['Python', 'DSA', 'Algorithms', 'Visualization'],
+    github: 'https://github.com/sahithi-manda/Smart_DSA_Visualizer',
     liveUrl: null,
     stars: 1,
     forks: 0,
@@ -19,16 +19,16 @@ export const fallbackProjects: PortfolioProject[] = [
     featured: true,
     displayOrder: 1,
     gridClass: 'md:col-span-3',
-    updatedAt: '2026-02-15T00:00:00Z',
+    updatedAt: '2026-03-01T00:00:00Z',
     isFromGitHub: false,
   },
   {
-    id: 'pca-ann-face-recognition',
-    title: 'Face Recognition: PCA & ANN',
+    id: 'ai-attendance-face-recognition',
+    title: 'AI-Based Attendance System',
     description:
-      'A mathematical and neural facial classifier model using Principal Component Analysis for dimensional reduction and Artificial Neural Networks for identity sorting.',
-    tech: ['Python', 'OpenCV', 'TensorFlow', 'PCA', 'ANN'],
-    github: 'https://github.com/sahithi-manda/PCA_ANN-FaceRecogination',
+      'An automated attendance system using computer vision and facial recognition techniques to identify individuals and record attendance efficiently.',
+    tech: ['Python', 'OpenCV', 'Face Recognition', 'Computer Vision'],
+    github: 'https://github.com/sahithi-manda/AI-Based-Attendance-using-Face-Recogination',
     liveUrl: null,
     stars: 1,
     forks: 0,
@@ -36,6 +36,23 @@ export const fallbackProjects: PortfolioProject[] = [
     featured: true,
     displayOrder: 2,
     gridClass: 'md:col-span-3',
+    updatedAt: '2026-02-20T00:00:00Z',
+    isFromGitHub: false,
+  },
+  {
+    id: 'pca-ann-face-recognition',
+    title: 'Face Recognition System: PCA & ANN',
+    description:
+      'A facial recognition system using Principal Component Analysis (PCA) for feature extraction and Artificial Neural Networks (ANN) for classification.',
+    tech: ['Python', 'OpenCV', 'TensorFlow', 'Scikit-learn', 'PCA', 'ANN'],
+    github: 'https://github.com/sahithi-manda/PCA_ANN-FaceRecogination',
+    liveUrl: null,
+    stars: 1,
+    forks: 0,
+    language: 'Python',
+    featured: true,
+    displayOrder: 3,
+    gridClass: 'md:col-span-2',
     updatedAt: '2026-02-10T00:00:00Z',
     isFromGitHub: false,
   },
@@ -270,21 +287,36 @@ export const fallbackProjects: PortfolioProject[] = [
  * Intelligent description and tech dictionary for existing repos if GitHub description is empty
  */
 export const repoCuratedKnowledge: Record<string, { title: string; description: string; tech: string[]; featured?: boolean; displayOrder?: number }> = {
+  'Smart_DSA_Visualizer': {
+    title: 'Smart DSA Visualizer',
+    description:
+      'An interactive DSA analysis and visualization system demonstrating the step-by-step execution of algorithms and data structures with complexity analysis.',
+    tech: ['Python', 'DSA', 'Algorithms', 'Visualization'],
+    featured: true,
+    displayOrder: 1,
+  },
+  'AI-Based-Attendance-using-Face-Recogination': {
+    title: 'AI-Based Attendance System',
+    description:
+      'An automated attendance system using computer vision and facial recognition techniques to identify individuals and record attendance efficiently.',
+    tech: ['Python', 'OpenCV', 'Face Recognition', 'Computer Vision'],
+    featured: true,
+    displayOrder: 2,
+  },
+  'PCA_ANN-FaceRecogination': {
+    title: 'Face Recognition System: PCA & ANN',
+    description:
+      'A facial recognition system using Principal Component Analysis (PCA) for feature extraction and Artificial Neural Networks (ANN) for classification.',
+    tech: ['Python', 'OpenCV', 'TensorFlow', 'Scikit-learn', 'PCA', 'ANN'],
+    featured: true,
+    displayOrder: 3,
+  },
   'AI-Study-Planner': {
     title: 'AI-Powered Study Planner',
     description:
       'An intelligent study planning application that creates personalized preparation schedules and custom task recommendations dynamically aligned with user constraints and study targets.',
     tech: ['Python', 'Streamlit', 'SQLite', 'Pandas'],
-    featured: true,
-    displayOrder: 1,
-  },
-  'PCA_ANN-FaceRecogination': {
-    title: 'Face Recognition: PCA & ANN',
-    description:
-      'A mathematical and neural facial classifier model using Principal Component Analysis for dimensional reduction and Artificial Neural Networks for identity sorting.',
-    tech: ['Python', 'OpenCV', 'TensorFlow', 'PCA', 'ANN'],
-    featured: true,
-    displayOrder: 2,
+    featured: false,
   },
   'AI_Recommendation_System': {
     title: 'AI Recommendation System',
@@ -305,12 +337,6 @@ export const repoCuratedKnowledge: Record<string, { title: string; description: 
     description:
       'An image classification and optical character recognition dashboard using PyTorch, ResNet18 feature maps, and EasyOCR parsing.',
     tech: ['PyTorch', 'ResNet18', 'EasyOCR'],
-  },
-  'AI-Based-Attendance-using-Face-Recogination': {
-    title: 'AI Attendance Face Recognition',
-    description:
-      'An automated classroom/office attendance logging platform that tracks student check-ins in real-time via live video facial scanning.',
-    tech: ['Python', 'OpenCV', 'Face Recognition'],
   },
   'AI-Powered-Student-Score-Predictor': {
     title: 'AI Student Score Predictor',

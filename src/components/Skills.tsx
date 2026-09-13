@@ -9,16 +9,20 @@ interface SkillGroup {
 
 const skillsData: SkillGroup[] = [
   {
-    category: 'Languages',
-    skills: ['Python', 'Java'],
+    category: 'Programming & Web',
+    skills: ['Python', 'Java (Basics)', 'HTML', 'CSS', 'JavaScript'],
   },
   {
-    category: 'AI & ML Core',
-    skills: ['Machine Learning', 'Data Analysis', 'Computer Vision', 'NLP'],
+    category: 'AI / ML Core',
+    skills: ['Machine Learning', 'Data Preprocessing', 'NLP', 'RAG', 'LLMs', 'ANN', 'PCA'],
   },
   {
-    category: 'Tools & Libraries',
-    skills: ['Git', 'GitHub', 'Streamlit', 'Google Colab', 'Pandas', 'NumPy', 'OpenCV', 'TensorFlow'],
+    category: 'Libraries & Frameworks',
+    skills: ['Scikit-learn', 'TensorFlow', 'OpenCV', 'Streamlit', 'NumPy', 'Pandas', 'Matplotlib'],
+  },
+  {
+    category: 'Database & Tools',
+    skills: ['SQLite', 'Git', 'GitHub', 'VS Code', 'Eclipse'],
   },
 ];
 
