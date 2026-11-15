@@ -6,6 +6,7 @@ import antonUrl from '@fontsource/anton/files/anton-latin-400-normal.woff?url';
 import { frame } from '../../lib/store';
 import { ACCENT } from '../palette';
 import { ANCHORS } from '../rig';
+import { makeFriendlyHead } from './friendlyHead';
 
 useGLTF.preload('/models/head.glb');
 
@@ -13,18 +14,21 @@ useGLTF.preload('/models/head.glb');
 const NECK_CUT = -1.55;
 const HEAD_SCALE = 0.62;
 
-/** Black-chrome physical material with a travelling ice-blue scan band injected into the shader. */
+/** Warm pearl-white ceramic with a soft sheen; the neck is cut in the shader. */
 function useAndroidMaterial() {
   const uniforms = useMemo(() => ({ uTime: { value: 0 }, uAccent: { value: new THREE.Color(ACCENT) } }), []);
   const material = useMemo(() => {
     const m = new THREE.MeshPhysicalMaterial({
       side: THREE.DoubleSide,
-      color: '#0a0c0f',
-      metalness: 1,
-      roughness: 0.2,
+      color: '#eef0f2',
+      metalness: 0.02,
+      roughness: 0.34,
       clearcoat: 1,
-      clearcoatRoughness: 0.06,
-      envMapIntensity: 1.25,
+      clearcoatRoughness: 0.14,
+      sheen: 0.5,
+      sheenRoughness: 0.6,
+      sheenColor: new THREE.Color('#cfeaff'),
+      envMapIntensity: 0.9,
     });
     m.onBeforeCompile = (shader) => {
       shader.defines = { ...(shader.defines ?? {}), NECK_CUT: NECK_CUT.toFixed(2) };
@@ -43,9 +47,8 @@ function useAndroidMaterial() {
         .replace(
           '#include <emissivemap_fragment>',
           `#include <emissivemap_fragment>
-          float scanY = mod(uTime * 1.1, 11.0) - 5.0;
-          float band = exp(-pow((vObjPos.y - scanY) * 7.0, 2.0));
-          totalEmissiveRadiance += uAccent * band * 0.35;`,
+          // Faint warm subsurface-like glow so the ceramic never reads as cold.
+          totalEmissiveRadiance += vec3(0.05, 0.045, 0.04);`,
         );
     };
     return m;
@@ -57,19 +60,16 @@ function Goggles() {
   const glass = useMemo(
     () =>
       new THREE.MeshPhysicalMaterial({
-        color: ACCENT,
-        metalness: 0.2,
-        roughness: 0.04,
-        transmission: 0.35,
-        thickness: 0.3,
-        ior: 1.5,
-        iridescence: 0.9,
-        iridescenceIOR: 1.7,
-        iridescenceThicknessRange: [200, 600],
-        emissive: new THREE.Color(ACCENT),
-        emissiveIntensity: 0.9,
+        color: '#e8f6ff',
+        metalness: 0,
+        roughness: 0.03,
+        transmission: 1,
+        thickness: 0.15,
+        ior: 1.45,
+        transparent: true,
+        opacity: 0.9,
         clearcoat: 1,
-        envMapIntensity: 2.2,
+        envMapIntensity: 1.6,
       }),
     [],
   );
@@ -77,7 +77,23 @@ function Goggles() {
     () => new THREE.MeshPhysicalMaterial({ color: '#d5dade', metalness: 1, roughness: 0.1, clearcoat: 1 }),
     [],
   );
-  const rubber = useMemo(() => new THREE.MeshPhysicalMaterial({ color: '#08090a', metalness: 0.3, roughness: 0.55, clearcoat: 0.3 }), []);
+  const rubber = useMemo(() => new THREE.MeshPhysicalMaterial({ color: '#c9d1d8', metalness: 0.1, roughness: 0.5, clearcoat: 0.4 }), []);
+  const iris = useMemo(() => new THREE.MeshBasicMaterial({ color: new THREE.Color(ACCENT).multiplyScalar(1.6), toneMapped: false }), []);
+  const backing = useMemo(() => new THREE.MeshStandardMaterial({ color: '#0f1b24', roughness: 0.6 }), []);
+  const shine = useMemo(() => new THREE.MeshBasicMaterial({ color: '#ffffff', toneMapped: false }), []);
+  const eyes = useRef<THREE.Group[]>([]);
+  // Eyes follow the pointer and blink every few seconds.
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    const cycle = t % 4.2;
+    const blink = cycle > 4.0 ? Math.abs(Math.sin(((cycle - 4.0) / 0.2) * Math.PI)) : 0;
+    eyes.current.forEach((e) => {
+      if (!e) return;
+      e.position.x = THREE.MathUtils.lerp(e.position.x, frame.pointer.x * 0.14, 0.1);
+      e.position.y = THREE.MathUtils.lerp(e.position.y, frame.pointer.y * 0.1, 0.1);
+      e.scale.y = Math.max(0.08, 1 - blink);
+    });
+  });
   const strap = useMemo(() => {
     const gap = 0.9; // radians either side of the face
     const pts: THREE.Vector3[] = [];
@@ -98,6 +114,18 @@ function Goggles() {
       <mesh material={chrome} position-z={-0.12} rotation-x={Math.PI / 2}>
         <cylinderGeometry args={[0.62, 0.66, 0.24, 64, 1, true]} />
       </mesh>
+      {/* Dark lens backing, then a soft round eye with a catch-light */}
+      <mesh material={backing} position-z={-0.13}>
+        <circleGeometry args={[0.6, 64]} />
+      </mesh>
+      <group ref={(g) => { if (g) eyes.current[x > 0 ? 1 : 0] = g; }} position-z={-0.1}>
+        <mesh material={iris}>
+          <circleGeometry args={[0.31, 48]} />
+        </mesh>
+        <mesh material={shine} position={[0.1, 0.11, 0.01]}>
+          <circleGeometry args={[0.065, 24]} />
+        </mesh>
+      </group>
       <mesh material={glass} scale={[1, 1, 0.32]} position-z={-0.04}>
         <sphereGeometry args={[0.56, 64, 32]} />
       </mesh>
@@ -119,7 +147,7 @@ function Goggles() {
 /** Machined collar where the neck is cut. */
 function Collar() {
   const steel = useMemo(
-    () => new THREE.MeshPhysicalMaterial({ color: '#9aa1a8', metalness: 1, roughness: 0.22, clearcoat: 0.6 }),
+    () => new THREE.MeshPhysicalMaterial({ color: '#d7dde2', metalness: 0.6, roughness: 0.3, clearcoat: 0.8 }),
     [],
   );
   const ring = useMemo(
@@ -203,7 +231,7 @@ export function CoreStation({ tier }: { tier: 'high' | 'low' }) {
     scene.traverse((o) => {
       if ((o as THREE.Mesh).isMesh && !g) g = (o as THREE.Mesh).geometry;
     });
-    return g as unknown as THREE.BufferGeometry;
+    return makeFriendlyHead(g as unknown as THREE.BufferGeometry);
   }, [scene]);
 
   const target = useMemo(() => {
@@ -218,8 +246,10 @@ export function CoreStation({ tier }: { tier: 'high' | 'low' }) {
     const t = state.clock.elapsedTime;
     const px = frame.pointer.x;
     const py = frame.pointer.y;
-    head.current.rotation.y = THREE.MathUtils.damp(head.current.rotation.y, -0.38 + px * 0.42, 2.2, dt);
-    head.current.rotation.x = THREE.MathUtils.damp(head.current.rotation.x, -py * 0.16 + 0.03, 2.2, dt);
+    head.current.rotation.y = THREE.MathUtils.damp(head.current.rotation.y, -0.12 + px * 0.4, 2.2, dt);
+    head.current.rotation.x = THREE.MathUtils.damp(head.current.rotation.x, -py * 0.14 - 0.06 + Math.sin(t * 0.9) * 0.015, 2.2, dt);
+    // A small, curious head tilt.
+    head.current.rotation.z = THREE.MathUtils.damp(head.current.rotation.z, 0.09 + Math.sin(t * 0.5) * 0.03 - px * 0.05, 2, dt);
     // As the camera departs, the wordmark dissolves and the head sinks into the floor.
     const leave = THREE.MathUtils.smoothstep(frame.t, 0.04, 0.4);
     head.current.position.y = Math.sin(t * 0.6) * 0.06 - leave * 6;
@@ -286,7 +316,9 @@ export function CoreStation({ tier }: { tier: 'high' | 'low' }) {
           opacity={0.12}
         />
       )}
-      <pointLight position={[3.5, 0.6, 2.4]} intensity={6} distance={9} color={ACCENT} />
+      <pointLight position={[3.5, 0.6, 2.4]} intensity={4} distance={9} color={ACCENT} />
+      {/* Warm front fill so the face reads soft and approachable */}
+      <pointLight position={[-1.2, 1.2, 4.5]} intensity={9} distance={10} color="#ffe2c8" />
     </group>
   );
 }
