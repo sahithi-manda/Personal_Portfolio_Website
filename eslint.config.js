@@ -19,4 +19,12 @@ export default defineConfig([
       globals: globals.browser,
     },
   },
+  {
+    // React Three Fiber mutates Three.js objects inside useFrame by design.
+    files: ['src/scene/**/*.{ts,tsx}'],
+    rules: {
+      'react-hooks/immutability': 'off',
+      'react-hooks/globals': 'off',
+    },
+  },
 ])

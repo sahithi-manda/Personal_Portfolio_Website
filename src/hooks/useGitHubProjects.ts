@@ -111,6 +111,8 @@ export const useGitHubProjects = (): UseGitHubProjectsReturn => {
 
   useEffect(() => {
     isMountedRef.current = true;
+    // Fetching on mount is the intended side effect of this hook.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadProjects(false);
 
     return () => {
