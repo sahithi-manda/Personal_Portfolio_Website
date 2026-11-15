@@ -1,177 +1,62 @@
-# Sahithi Reddy - AI & Machine Learning Portfolio Website
+# Sahithi Reddy · AI / ML Engineer
 
-A premium, recruiter-focused, single-page developer portfolio website built for **Sahithi Reddy**. Inspired by the sleek, minimalist design aesthetics of modern tech companies like Vercel, Stripe, Linear, and OpenAI.
+An interactive 3D portfolio: a single WebGL "research facility" the camera flies through as you scroll. Six stations, one per section:
 
-This portfolio highlights projects, internship experiences, skillsets, and certifications in Artificial Intelligence, Machine Learning, and Computer Vision, featuring premium interactions, an interactive 3D particle background, and glassmorphic designs.
+| # | Station | 3D | Content |
+|---|---|---|---|
+| 01 | Core | Black-chrome android head, glass goggles, scan band, orbital data streams, editorial wordmark | Name, role, tagline, stats |
+| 02 | Identity | Layered neural network; layers light up as you read | Bio, education, focus areas |
+| 03 | Galaxy | Clickable constellation of skills grouped into systems | Each skill with the project/role/course that backs it |
+| 04 | Laboratory | Pedestal under a volumetric spotlight, one specimen per project | Six featured projects + full dossiers, GitHub-synced archive |
+| 05 | Timeline | Corridor of light gates the camera flies through | Internships, education, certifications |
+| 06 | Signal | Machined titanium ring emitting pulses | Contact links |
 
----
+## Stack
 
-## 🛠️ Technology Stack
+React 19 · Vite · TypeScript · Three.js · React Three Fiber · Drei · @react-three/postprocessing · GSAP + ScrollTrigger · Lenis · Framer Motion · Tailwind CSS v4
 
-* **Core Framework**: React 19 + TypeScript (Vite)
-* **Styling**: Tailwind CSS v4 (using native theme variables)
-* **Animations**: Framer Motion (scroll reveals, staggered item animations, springs)
-* **3D Background**: Three.js (WebGL rendering of custom gradient particle field with mouse tracking)
-* **Icons**: React Icons (Lucide / FontAwesome / Feather)
-
----
-
-## ✨ Features & Design Implementations
-
-1. **Ambient 3D Particle Field**: A lightweight Three.js particle container that rotates gently and drifts in response to user cursor positioning without introducing high cpu overhead.
-2. **Interactive Glassmorphic Cards**: Premium card items featuring translucent background filters (`backdrop-filter`) and border borders, along with local mouse hover glow tracking (adjusts CSS variables `--mouse-x` and `--mouse-y` dynamically).
-3. **Typography and Colors**: Dark theme built using slate colors (`#0A0A0A` and `#111827`) highlighted with elegant blue and purple gradients (`#60A5FA` & `#A78BFA`).
-4. **Scroll Progress Indicator**: A smooth spring-loaded bar at the top of the screen tracking page scroll progress.
-5. **Timeline Journey**: A stylized vertical timeline for career internships featuring scroll reveals and glowing nodes.
-6. **Smart Utilities**: An active navigation tracker highlighting current section focus, an email click-to-clipboard copier card, and responsive mobile navigation drawer.
-
----
-
-## 📁 Folder Structure
+## Structure
 
 ```text
-Portfolio/
-├── public/                 # Static asset folders
-├── src/
-│   ├── assets/             # Brand logos
-│   ├── components/         # Reusable presentation components
-│   │   ├── Background3D.tsx# WebGL particles canvas
-│   │   ├── Navbar.tsx      # Glassmorphic header
-│   │   ├── Hero.tsx        # Title & typewriting hero
-│   │   ├── About.tsx       # Bio & key statistics
-│   │   ├── Experience.tsx  # Interactive journey timeline
-│   │   ├── Projects.tsx    # Staggered project layout
-│   │   ├── Skills.tsx      # Staggered technology chips
-│   │   ├── Certifications.tsx# Credential validator blocks
-│   │   ├── Contact.tsx     # Copy-email & social connects
-│   │   └── Footer.tsx      # Design signature
-│   ├── hooks/
-│   │   └── useMousePosition.ts # Custom glow-coordinates hook
-│   ├── App.tsx             # Layout aggregator
-│   ├── index.css           # Global theme, font, scroll styles
-│   └── main.tsx            # DOM mounting entry
-├── index.html              # SEO metadata & page mounting
-├── postcss.config.js       # PostCSS plugins config
-└── package.json            # Scripts & project dependencies
+src/
+  content/          profile, experience, skills, labs (single source of truth for all copy)
+  lib/
+    store.ts        tiny shared store between DOM and WebGL (no re-renders for per-frame values)
+    scroll.ts       Lenis smooth scroll, scroll → station mapping, ScrollTrigger
+    quality.ts      WebGL detection, quality tier, reduced-motion, 3D on/off preference
+  scene/            lazy-loaded WebGL world
+    Scene.tsx       canvas, fog, performance monitor, post-processing
+    CameraRig.tsx   camera flight between station keys, hold dolly, pointer parallax
+    Facility.tsx    Lightformer studio environment, architecture, reflective floor, GPU dust
+    rig.ts          station anchors and camera keys (desktop + compact)
+    stations/       one component per station + project specimens
+  ui/               header + station rail, loader, sections, dossier dialog
+  hooks/, services/ GitHub auto-sync (unchanged behaviour)
 ```
 
----
+## Editing content
 
-## 🚀 Getting Started
+All text lives in `src/content/`. Projects shown in the Laboratory are in `labs.ts`; list results only when they are in the repository's own output. Everything else on GitHub appears automatically in the archive (see *GitHub sync* below).
 
-### Prerequisites
+## Performance and accessibility
 
-* Node.js (v18 or newer)
-* npm (v9 or newer)
+- The 3D world is a separate chunk; text renders first.
+- Two quality tiers (`high` / `low`) chosen from device signals; the performance monitor lowers resolution if frame rate drops. Force one with `?tier=low` or `?tier=high`.
+- Without WebGL, or with *prefers-reduced-motion*, the site uses a static poster background; visitors can switch 3D on or off from the header (remembered locally).
+- All content is semantic HTML above the canvas: headings, lists, a native `<dialog>` for dossiers, keyboard-operable skill selection, skip link and focus styles.
 
-### 1. Clone & Install Dependencies
+## Run
 
 ```bash
-# Navigate to project directory and install packages
 npm install
-```
-
-### 2. Run Locally (Development Server)
-
-```bash
 npm run dev
-```
-
-Open the local address printed in the terminal (usually `http://localhost:5173`) in your browser.
-
-### 3. Compile Production Bundle
-
-```bash
 npm run build
 ```
 
-This compiles TypeScript and styles, outputting optimized, minified production assets into the `dist/` directory.
+## GitHub sync
 
----
+Public repositories under `VITE_GITHUB_USERNAME` (default `sahithi-manda`) appear in the archive automatically. Add a `portfolio.json` in a repository to customise it, or the topic `portfolio-hidden` to hide it. `VITE_GITHUB_TOKEN` is optional and raises the API rate limit.
 
-## ☁️ Vercel Deployment Instructions
+## Credits
 
-Deploying this Vite React app to **Vercel** is extremely simple:
-
-### Option A: Vercel Dashboard (Recommended)
-
-1. Push your project code to a **GitHub**, **GitLab**, or **Bitbucket** repository.
-2. Sign in to [Vercel](https://vercel.com) and click **Add New Project**.
-3. Select and import the repository containing this project.
-4. Vercel will automatically detect **Vite** as the framework preset and pre-populate the build settings:
-   * **Framework Preset**: `Vite`
-   * **Build Command**: `npm run build` (or `vite build`)
-   * **Output Directory**: `dist`
-5. Click **Deploy**. Your portfolio will be live on a production-ready global CDN in under a minute!
-
-### Option B: Vercel CLI (Command Line)
-
-If you have the Vercel CLI installed globally:
-
-```bash
-# Log in to Vercel account
-vercel login
-
-# Initialize deployment configuration in the project folder
-vercel
-```
-
-Follow the interactive setup prompts. Once successfully linked, build and deploy in production mode by running:
-
-vercel --prod
-```
-
----
-
-## 🔄 Automatic GitHub Project Synchronization
-
-The portfolio features **automatic GitHub repository discovery and synchronization**. You never need to modify portfolio source code or edit project arrays to display a new project!
-
-### How Synchronization Works
-
-```text
-Create Repository on GitHub
-          ↓
-Push code to GitHub
-          ↓
-Portfolio dynamically detects new repository via GitHub API
-          ↓
-Project appears instantly in the Projects section
-```
-
-### Adding a New Project (Future Workflow)
-
-#### Minimum Effort Workflow (0 Code Changes)
-1. **Create a GitHub repository** under your configured GitHub account (`sahithi-manda`).
-2. **Push your code to GitHub**.
-3. **Done!** The portfolio will automatically detect the repository, format its name, extract description and languages/topics, and display it in the Projects section.
-
-#### Rich Customization Workflow (`portfolio.json`)
-If you want to customize project details, add an optional `portfolio.json` file in the **root** of your repository:
-
-```json
-{
-  "title": "Smart DSA Visualizer",
-  "description": "Interactive data structures and algorithms visualization platform with time-complexity analysis.",
-  "technologies": ["React", "TypeScript", "Tailwind CSS", "Framer Motion"],
-  "featured": true,
-  "displayOrder": 1,
-  "liveUrl": "https://dsa-visualizer-demo.vercel.app",
-  "category": "Algorithm Engineering"
-}
-```
-
-### GitHub Topic Controls (Direct from GitHub)
-
-You can control portfolio project visibility directly on GitHub using **Repository Topics**:
-
-* **Hide a repository**: Add the topic `portfolio-hidden` on GitHub. It will never appear in your portfolio.
-* **Feature a repository**: Add the topic `portfolio-featured` on GitHub. It will be promoted to the top of the Projects section.
-
-### Environment Variables
-
-| Variable | Description | Default |
-| :--- | :--- | :--- |
-| `VITE_GITHUB_USERNAME` | Your GitHub account username | `sahithi-manda` |
-| `VITE_GITHUB_TOKEN` | *(Optional)* Personal access token for 5,000 req/hr rate limits | None |
-
+The android head is based on the Lee Perry-Smith head scan by [Infinite Realities](https://www.infinite-realities.net), licensed [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/), restyled (neck cut, materials, goggles and collar added in code).

@@ -115,7 +115,7 @@ export const normalizeGitHubRepo = async (
   }
 
   // Determine Technologies
-  let tech: string[] = [];
+  let tech: string[];
   if (metadata?.technologies && metadata.technologies.length > 0) {
     tech = metadata.technologies;
   } else if (curated?.tech && (!repo.topics || repo.topics.length === 0)) {

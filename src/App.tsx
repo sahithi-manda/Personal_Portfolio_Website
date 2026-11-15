@@ -1,131 +1,97 @@
-import { motion, useScroll, useSpring } from 'framer-motion';
-import { Background3D } from './components/Background3D';
-import { CustomCursor } from './components/CustomCursor';
-import { Navbar } from './components/Navbar';
-import { Hero } from './components/Hero';
-import { About } from './components/About';
-import { Experience } from './components/Experience';
-import { Projects } from './components/Projects';
-import { Skills } from './components/Skills';
-import { Certifications } from './components/Certifications';
-import { Resume } from './components/Resume';
-import { Contact } from './components/Contact';
-import { Footer } from './components/Footer';
+import { lazy, Suspense, useEffect, useState } from 'react';
+import { Header } from './ui/Header';
+import { Loader } from './ui/Loader';
+import { useReveal } from './ui/useReveal';
+import { Hero } from './ui/sections/Hero';
+import { Identity } from './ui/sections/Identity';
+import { Skills } from './ui/sections/Skills';
+import { Labs } from './ui/sections/Labs';
+import { Timeline } from './ui/sections/Timeline';
+import { Contact } from './ui/sections/Contact';
+import { frame, ui } from './lib/store';
+import { initSmoothScroll, initStationTracking, ScrollTrigger } from './lib/scroll';
+import { detectTier, hasWebGL, isSmallScreen, prefersReducedMotion, readSavedMode, saveMode, type Mode } from './lib/quality';
 
-function App() {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  });
+// The WebGL world is split out of the first paint.
+const Scene = lazy(() => import('./scene/Scene'));
 
-  return (
-    <div className="relative min-h-screen bg-[#0F172A] text-slate-300 select-none selection:bg-sky-500/25 selection:text-sky-200">
-      {/* Custom Cursor follower */}
-      <CustomCursor />
-
-      {/* Scroll Progress Bar Indicator */}
-      <motion.div
-        className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-500 origin-left z-[100]"
-        style={{ scaleX }}
-      />
-
-      {/* Colorful Mesh Gradients Background (Aesthetic Floating Orbs - Midnight Slate) */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none -z-20">
-        {/* Electric Cyan Orb */}
-        <div
-          className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full animate-float-1"
-          style={{
-            background: 'radial-gradient(circle, rgba(56, 189, 248, 0.12) 0%, rgba(56, 189, 248, 0.03) 45%, transparent 70%)',
-            transform: 'translate3d(0, 0, 0)',
-          }}
-        />
-        
-        {/* Soft Violet Orb */}
-        <div
-          className="absolute bottom-[15%] right-[-10%] w-[55vw] h-[55vw] rounded-full animate-float-2"
-          style={{
-            background: 'radial-gradient(circle, rgba(129, 140, 248, 0.11) 0%, rgba(129, 140, 248, 0.02) 45%, transparent 70%)',
-            transform: 'translate3d(0, 0, 0)',
-          }}
-        />
-        
-        {/* Luminous Amethyst Orb */}
-        <div
-          className="absolute top-[25%] right-[10%] w-[45vw] h-[45vw] rounded-full animate-float-3"
-          style={{
-            background: 'radial-gradient(circle, rgba(168, 85, 247, 0.09) 0%, rgba(168, 85, 247, 0.02) 45%, transparent 70%)',
-            transform: 'translate3d(0, 0, 0)',
-          }}
-        />
-        
-        {/* Indigo Orb */}
-        <div
-          className="absolute bottom-[-10%] left-[20%] w-[50vw] h-[50vw] rounded-full animate-float-1"
-          style={{
-            background: 'radial-gradient(circle, rgba(99, 102, 241, 0.11) 0%, rgba(99, 102, 241, 0.02) 45%, transparent 70%)',
-            transform: 'translate3d(0, 0, 0)',
-          }}
-        />
-      </div>
-
-      {/* Grid Background Pattern */}
-      <div className="fixed inset-0 grid-bg pointer-events-none -z-10" />
-
-      {/* Tactile Noise/Grain Overlay */}
-      <div className="fixed inset-0 noise-bg opacity-[0.015] pointer-events-none z-[90]" />
-
-      {/* Global Fixed Holographic Mascot Background (Visible across entire portfolio) */}
-      <div className="hidden lg:flex fixed right-8 top-[28%] w-[32vw] h-[32vw] items-center justify-center pointer-events-none -z-10 select-none">
-        {/* Soft local backdrop glow */}
-        <div
-          className="absolute inset-0 rounded-full"
-          style={{
-            background: 'radial-gradient(circle, rgba(56, 189, 248, 0.10) 0%, rgba(129, 140, 248, 0.05) 50%, transparent 75%)',
-            transform: 'translate3d(0, 0, 0)',
-          }}
-        />
-        
-        {/* Orbit Ring */}
-        <motion.div
-          animate={{ rotate: -360 }}
-          transition={{ duration: 45, repeat: Infinity, ease: 'linear' }}
-          className="absolute w-[105%] h-[105%] rounded-full border border-dashed border-sky-400/15"
-        />
-
-        {/* Mascot Image (Screen-blended for celestial watermark effect) */}
-        <motion.img
-          src="/developer_avatar.png"
-          alt="Sahithi Reddy Holographic Watermark"
-          animate={{ y: [0, -15, 0] }}
-          transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-          className="w-[85%] h-[85%] object-contain rounded-full opacity-[0.08] mix-blend-screen select-none pointer-events-none"
-        />
-      </div>
-
-      {/* Three.js Interactive Particle Background */}
-      <Background3D />
-
-      {/* Navigation Header */}
-      <Navbar />
-
-      {/* Page Sections */}
-      <main className="relative z-10">
-        <Hero />
-        <About />
-        <Experience />
-        <Projects />
-        <Skills />
-        <Certifications />
-        <Resume />
-        <Contact />
-      </main>
-
-      {/* Footer Area */}
-      <Footer />
-    </div>
-  );
+function initialMode(): Mode {
+  if (!hasWebGL()) return 'static';
+  return readSavedMode() ?? (prefersReducedMotion() ? 'static' : '3d');
 }
 
-export default App;
+export default function App() {
+  const [webgl] = useState(hasWebGL);
+  const [mode, setMode] = useState<Mode>(initialMode);
+  const [tier] = useState(detectTier);
+  const [compact, setCompact] = useState(isSmallScreen);
+  const [reduced] = useState(prefersReducedMotion);
+  const is3D = mode === '3d';
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)');
+    const on = () => setCompact(mq.matches);
+    mq.addEventListener('change', on);
+    return () => mq.removeEventListener('change', on);
+  }, []);
+
+  // Smooth scrolling and scroll→camera mapping only matter in 3D mode.
+  useEffect(() => initSmoothScroll(is3D && !reduced), [is3D, reduced]);
+  useEffect(() => initStationTracking(), []);
+  useReveal(!reduced);
+
+  useEffect(() => {
+    if (!is3D) ui.set({ sceneReady: true });
+    else ui.set({ sceneReady: false });
+    ScrollTrigger.refresh();
+  }, [is3D]);
+
+  useEffect(() => {
+    const onMove = (e: PointerEvent) => {
+      if (e.pointerType !== 'mouse') return;
+      frame.pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
+      frame.pointer.y = -((e.clientY / window.innerHeight) * 2 - 1);
+    };
+    window.addEventListener('pointermove', onMove, { passive: true });
+    return () => window.removeEventListener('pointermove', onMove);
+  }, []);
+
+  const toggle = () => {
+    const next: Mode = is3D ? 'static' : '3d';
+    saveMode(next);
+    setMode(next);
+  };
+
+  return (
+    <>
+      <a href="#identity" className="sr-only z-[200] bg-bone px-4 py-2 text-ink focus:not-sr-only focus:fixed focus:left-4 focus:top-4">
+        Skip to content
+      </a>
+
+      {is3D ? (
+        <>
+          <Suspense fallback={null}>
+            <Scene tier={tier} compact={compact} />
+          </Suspense>
+          <Loader />
+        </>
+      ) : (
+        <div aria-hidden className="fixed inset-0 -z-0 bg-ink">
+          <img src="/poster.jpg" alt="" className="h-full w-full object-cover opacity-60" />
+          <div className="absolute inset-0 bg-gradient-to-b from-ink/30 via-ink/60 to-ink" />
+        </div>
+      )}
+
+      <Header mode={mode} onToggleMode={toggle} canUse3D={webgl} />
+
+      <main className="relative z-10">
+        <Hero />
+        <Identity />
+        <Skills is3D={is3D} />
+        <Labs is3D={is3D} />
+        <Timeline />
+        <Contact />
+      </main>
+    </>
+  );
+}
