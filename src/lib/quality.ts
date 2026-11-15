@@ -46,3 +46,15 @@ export function saveMode(m: Mode) {
     /* storage unavailable */
   }
 }
+
+export const INTRO_SESSION_KEY = 'sr-intro-seen';
+
+/** The entry sequence plays once per browser session and never with reduced motion. */
+export function shouldPlayIntro(): boolean {
+  if (prefersReducedMotion()) return false;
+  try {
+    return sessionStorage.getItem(INTRO_SESSION_KEY) !== '1';
+  } catch {
+    return true;
+  }
+}

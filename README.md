@@ -11,6 +11,8 @@ An interactive 3D portfolio: a single WebGL "research facility" the camera flies
 | 05 | Timeline | Corridor of light gates the camera flies through | Internships, education, certifications |
 | 06 | Signal | Machined titanium ring emitting pulses | Contact links |
 
+On first visit in a session, an entry sequence plays: phrases vaporise left to right into ice-blue particles (“Hello, World.” → “Intelligence · Vision · Language.” → “Sahithi Reddy.”) while the 3D world loads. Click or press any key to skip; it is skipped entirely with *prefers-reduced-motion*.
+
 ## Stack
 
 React 19 · Vite · TypeScript · Three.js · React Three Fiber · Drei · @react-three/postprocessing · GSAP + ScrollTrigger · Lenis · Framer Motion · Tailwind CSS v4

@@ -23,7 +23,7 @@ export function CameraRig({ compact }: { compact: boolean }) {
   useFrame((_, rawDt) => {
     const dt = Math.min(rawDt, 1 / 20);
     // Intro push-in once the scene is ready.
-    if (ui.get().sceneReady) intro.current = Math.min(1, intro.current + dt / 3.2);
+    if (ui.get().sceneReady && ui.get().introDone) intro.current = Math.min(1, intro.current + dt / 3.2);
     const introE = 1 - Math.pow(1 - intro.current, 4);
 
     smoothT.current = (window as Window & { __snapCamera?: boolean }).__snapCamera
