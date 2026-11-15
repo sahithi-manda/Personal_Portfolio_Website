@@ -120,7 +120,7 @@ export function IdentityStation() {
   const active = useRef(0);
 
   useFrame((state, dt) => {
-    const near = Math.abs(frame.t - 1) < 1.2;
+    const near = Math.abs(frame.t - 1) < 0.92;
     if (group.current) group.current.visible = near;
     if (!near) return;
     edgeMat.uniforms.uTime.value += dt;

@@ -56,7 +56,7 @@ export function LabStation({ tier }: { tier?: 'high' | 'low' }) {
 
   useFrame((state) => {
     if (!root.current) return;
-    const near = Math.abs(frame.t - 3) < 1.2;
+    const near = Math.abs(frame.t - 3) < 0.92;
     root.current.visible = near;
     if (ring.current) ring.current.opacity = 0.55 + Math.sin(state.clock.elapsedTime * 2) * 0.2;
   });

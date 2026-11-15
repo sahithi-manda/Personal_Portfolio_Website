@@ -34,9 +34,10 @@ function layout(): { placed: Placed[]; hubs: Record<SkillSystem, THREE.Vector3> 
   return { placed, hubs };
 }
 
-function Star({ p, glass }: { p: Placed; glass: THREE.Material }) {
+function Star({ p, glass, focusSystem }: { p: Placed; glass: THREE.Material; focusSystem?: SkillSystem }) {
   const selected = useUI((s) => s.selectedSkill === p.skill.id);
   const hovered = useUI((s) => s.hoveredSkill === p.skill.id);
+  const inFocus = focusSystem === p.skill.system;
   const group = useRef<THREE.Group>(null);
   const core = useRef<THREE.MeshBasicMaterial>(null);
   const label = useRef<THREE.Mesh>(null);
@@ -53,7 +54,7 @@ function Star({ p, glass }: { p: Placed; glass: THREE.Material }) {
     core.current.color.lerp(on ? accent : white, 0.12);
     core.current.color.multiplyScalar(1);
     const lm = label.current?.material as THREE.MeshBasicMaterial | undefined;
-    if (lm) lm.opacity = THREE.MathUtils.damp(lm.opacity, on ? 1 : 0.5, 6, dt);
+    if (lm) lm.opacity = THREE.MathUtils.damp(lm.opacity, on ? 1 : inFocus ? 0.65 : 0, 6, dt);
   });
 
   return (
@@ -150,7 +151,7 @@ export function GalaxyStation() {
 
   useFrame((state, dt) => {
     if (!group.current) return;
-    const near = Math.abs(frame.t - 2) < 1.2;
+    const near = Math.abs(frame.t - 2) < 0.92;
     group.current.visible = near;
     if (!near) return;
     group.current.rotation.y += dt * 0.03;
@@ -192,7 +193,7 @@ export function GalaxyStation() {
           </Billboard>
         ))}
         {placed.map((p) => (
-          <Star key={p.skill.id} p={p} glass={glass} />
+          <Star key={p.skill.id} p={p} glass={glass} focusSystem={selectedSystem} />
         ))}
       </group>
       <pointLight position={[0, 2, 4]} intensity={10} distance={14} color="#e7eef4" />

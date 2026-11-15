@@ -53,7 +53,7 @@ export function Facility({ tier }: { tier: Tier }) {
     [],
   );
   const strip = useMemo(
-    () => new THREE.MeshStandardMaterial({ color: '#000', emissive: new THREE.Color('#dce8f2'), emissiveIntensity: 1.6, toneMapped: false }),
+    () => new THREE.MeshStandardMaterial({ color: '#000', emissive: new THREE.Color('#9fb0bf'), emissiveIntensity: 0.32, toneMapped: false }),
     [],
   );
 
@@ -66,7 +66,7 @@ export function Facility({ tier }: { tier: Tier }) {
         <boxGeometry args={[1, 0.9, 1.4]} />
       </instancedMesh>
       <instancedMesh ref={strips} args={[undefined, undefined, count * 2]} material={strip}>
-        <boxGeometry args={[0.05, 9, 0.06]} />
+        <boxGeometry args={[0.12, 9, 0.06]} />
       </instancedMesh>
 
       <mesh rotation-x={-Math.PI / 2} position={[0, FLOOR_Y, -80]} receiveShadow>

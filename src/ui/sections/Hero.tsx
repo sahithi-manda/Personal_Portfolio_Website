@@ -2,16 +2,10 @@ import { profile, stats } from '../../content/profile';
 import { scrollToId } from '../../lib/scroll';
 import { Arrow, Shell } from './common';
 
-export function Hero({ is3D }: { is3D: boolean }) {
+export function Hero() {
   return (
     <section id="core" data-station="core" className="relative flex min-h-[115svh] flex-col" aria-labelledby="hero-name">
-      {!is3D && (
-        <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="display absolute left-1/2 top-[14%] -translate-x-1/2 whitespace-nowrap text-[28vw] leading-none text-accent-deep/70 [mask-image:linear-gradient(180deg,#000_30%,transparent_85%)]">
-            SAHITHI
-          </div>
-        </div>
-      )}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[70%] bg-gradient-to-t from-ink/90 via-ink/50 to-transparent md:hidden" aria-hidden />
       <Shell className="relative flex min-h-[100svh] flex-col justify-end pb-14 pt-28 sm:pb-16">
         <div className="grid items-end gap-10 lg:grid-cols-12">
           {/* Identity block */}

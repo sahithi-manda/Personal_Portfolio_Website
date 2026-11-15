@@ -85,7 +85,7 @@ export default function App() {
       <Header mode={mode} onToggleMode={toggle} canUse3D={webgl} />
 
       <main className="relative z-10">
-        <Hero is3D={is3D} />
+        <Hero />
         <Identity />
         <Skills is3D={is3D} />
         <Labs is3D={is3D} />

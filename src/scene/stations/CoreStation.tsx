@@ -78,16 +78,28 @@ function Goggles() {
     [],
   );
   const rubber = useMemo(() => new THREE.MeshPhysicalMaterial({ color: '#08090a', metalness: 0.3, roughness: 0.55, clearcoat: 0.3 }), []);
+  const strap = useMemo(() => {
+    const gap = 0.9; // radians either side of the face
+    const pts: THREE.Vector3[] = [];
+    for (let i = 0; i <= 64; i++) {
+      const a = gap + (i / 64) * (Math.PI * 2 - gap * 2);
+      pts.push(new THREE.Vector3(Math.sin(a) * 1.9, 1.5, 0.15 + Math.cos(a) * 2.1));
+    }
+    // Run the ends forward into the lens housings.
+    pts.unshift(new THREE.Vector3(1.38, 1.47, 1.86));
+    pts.push(new THREE.Vector3(-1.38, 1.47, 1.86));
+    return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 96, 0.075, 10, false);
+  }, []);
   const lens = (x: number) => (
     <group position={[x, 1.45, 1.98]} rotation={[-0.06, x > 0 ? 0.28 : -0.28, 0]}>
       <mesh material={chrome}>
         <torusGeometry args={[0.6, 0.1, 32, 96]} />
       </mesh>
-      <mesh material={chrome} position-z={-0.12}>
+      <mesh material={chrome} position-z={-0.12} rotation-x={Math.PI / 2}>
         <cylinderGeometry args={[0.62, 0.66, 0.24, 64, 1, true]} />
       </mesh>
-      <mesh material={glass} scale={[1, 0.42, 1]} rotation-x={Math.PI / 2}>
-        <sphereGeometry args={[0.56, 64, 24, 0, Math.PI * 2, 0, Math.PI / 2]} />
+      <mesh material={glass} scale={[1, 1, 0.32]} position-z={-0.04}>
+        <sphereGeometry args={[0.56, 64, 32]} />
       </mesh>
     </group>
   );
@@ -98,10 +110,8 @@ function Goggles() {
       <mesh material={chrome} position={[0, 1.5, 2.22]} rotation-z={Math.PI / 2}>
         <cylinderGeometry args={[0.06, 0.06, 0.42, 16]} />
       </mesh>
-      {/* Head strap */}
-      <mesh material={rubber} position={[0, 1.5, 0.15]} rotation-x={Math.PI / 2} scale={[1, 1.12, 1]}>
-        <torusGeometry args={[1.86, 0.075, 12, 128]} />
-      </mesh>
+      {/* Head strap: wraps the back of the head and meets the lenses at the temples */}
+      <mesh material={rubber} geometry={strap} />
     </group>
   );
 }
@@ -184,6 +194,9 @@ export function CoreStation({ tier }: { tier: 'high' | 'low' }) {
   const { material, uniforms } = useAndroidMaterial();
   const head = useRef<THREE.Group>(null);
   const spot = useRef<THREE.SpotLight>(null);
+  const root = useRef<THREE.Group>(null);
+  const word = useRef<THREE.Mesh>(null);
+  const veil = useRef<THREE.ShaderMaterial>(null);
 
   const geometry = useMemo(() => {
     let g: THREE.BufferGeometry | null = null;
@@ -207,14 +220,22 @@ export function CoreStation({ tier }: { tier: 'high' | 'low' }) {
     const py = frame.pointer.y;
     head.current.rotation.y = THREE.MathUtils.damp(head.current.rotation.y, -0.38 + px * 0.42, 2.2, dt);
     head.current.rotation.x = THREE.MathUtils.damp(head.current.rotation.x, -py * 0.16 + 0.03, 2.2, dt);
-    head.current.position.y = Math.sin(t * 0.6) * 0.06;
-    // Only render when the core is near the camera's path.
-    head.current.parent!.visible = frame.t < 1.6;
+    // As the camera departs, the wordmark dissolves and the head sinks into the floor.
+    const leave = THREE.MathUtils.smoothstep(frame.t, 0.04, 0.4);
+    head.current.position.y = Math.sin(t * 0.6) * 0.06 - leave * 6;
+    const wm = word.current?.material as THREE.Material & { opacity: number } | undefined;
+    if (wm) {
+      wm.transparent = true;
+      wm.opacity = 1 - THREE.MathUtils.smoothstep(frame.t, 0.02, 0.22);
+    }
+    if (veil.current) veil.current.uniforms.uFade.value = 1 - THREE.MathUtils.smoothstep(frame.t, 0.02, 0.22);
+    if (root.current) root.current.visible = frame.t < 0.6;
   });
 
   return (
-    <group position={ANCHORS.core}>
+    <group position={ANCHORS.core} ref={root}>
       <Text
+        ref={word}
         font={antonUrl}
         fontSize={5.2}
         letterSpacing={0.01}
@@ -231,10 +252,12 @@ export function CoreStation({ tier }: { tier: 'high' | 'low' }) {
       <mesh position={[0, -0.6, -5.0]}>
         <planeGeometry args={[30, 6]} />
         <shaderMaterial
+          ref={veil}
           transparent
           depthWrite={false}
+          uniforms={{ uFade: { value: 1 } }}
           vertexShader={`varying vec2 vUv; void main(){ vUv=uv; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0);} `}
-          fragmentShader={`varying vec2 vUv; void main(){ float a = smoothstep(0.98, 0.2, vUv.y); gl_FragColor = vec4(0.02,0.024,0.03, a);} `}
+          fragmentShader={`uniform float uFade; varying vec2 vUv; void main(){ float a = smoothstep(0.98, 0.2, vUv.y); gl_FragColor = vec4(0.02,0.024,0.03, a * uFade);} `}
         />
       </mesh>
 

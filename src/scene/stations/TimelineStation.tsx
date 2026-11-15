@@ -36,7 +36,7 @@ function Gate({ g, i }: { g: (typeof GATES)[number]; i: number }) {
     [g.w / 2, 0, t, g.h],
   ];
   return (
-    <group position={[i % 2 === 0 ? -0.3 : 0.3, 0, g.z]}>
+    <group position={[[-1.9, 1.9, -1.2][i], 0, g.z]}>
       {bars.map(([x, y, w, h], k) => (
         <mesh key={k} position={[x, y, 0]} material={frameMat}>
           <boxGeometry args={[w, h, 0.35]} />
@@ -54,9 +54,6 @@ function Gate({ g, i }: { g: (typeof GATES)[number]; i: number }) {
       </Text>
       <Text font={monoUrl} fontSize={0.16} letterSpacing={0.12} position={[-g.w / 2 + 0.38, g.h / 2 + 0.2, 0]} anchorX="left" color={ACCENT} material-toneMapped={false}>
         {g.sub}
-      </Text>
-      <Text font={antonUrl} fontSize={g.major ? 2.4 : 1.6} position={[g.w / 2 - 0.2, -g.h / 2 + 0.2, -0.4]} anchorX="right" anchorY="bottom" color="#1a2026" material-toneMapped={false}>
-        {g.year}
       </Text>
     </group>
   );

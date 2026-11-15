@@ -26,7 +26,9 @@ export function CameraRig({ compact }: { compact: boolean }) {
     if (ui.get().sceneReady) intro.current = Math.min(1, intro.current + dt / 3.2);
     const introE = 1 - Math.pow(1 - intro.current, 4);
 
-    smoothT.current = THREE.MathUtils.damp(smoothT.current, frame.t, 3.2, dt);
+    smoothT.current = (window as Window & { __snapCamera?: boolean }).__snapCamera
+      ? frame.t
+      : THREE.MathUtils.damp(smoothT.current, frame.t, 3.2, dt);
     const t = THREE.MathUtils.clamp(smoothT.current, 0, keys.length - 1);
     const i = Math.min(Math.floor(t), keys.length - 2);
     const f = t - i;

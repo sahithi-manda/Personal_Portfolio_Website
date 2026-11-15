@@ -67,7 +67,7 @@ export function Contact() {
             <h2 id="contact-title" className="display mt-6 text-6xl sm:text-8xl" data-reveal>
               Let’s work
               <br />
-              together <span className="text-accent">✦</span>
+              together <span className="align-top font-sans text-3xl text-accent sm:text-4xl" aria-hidden>✦</span>
             </h2>
             <p className="mt-6 max-w-md text-[15px] leading-relaxed text-mute" data-reveal>
               Open to AI/ML internships, research collaborations and project work. The fastest way to reach me is email.

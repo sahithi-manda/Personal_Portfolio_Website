@@ -33,7 +33,7 @@ export function Header({ mode, onToggleMode, canUse3D }: { mode: Mode; onToggleM
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-50">
+      <header className="fixed inset-x-0 top-0 z-50 bg-gradient-to-b from-ink via-ink/75 to-transparent pb-6 lg:from-ink/80 lg:via-ink/30">
         <div className="mx-auto flex max-w-[1600px] items-start justify-between px-4 pt-5 sm:px-8 lg:px-12">
           <button onClick={() => go('core')} className="group text-left" aria-label="Back to top">
             <span className="block font-mono text-[11px] uppercase tracking-[0.22em] text-accent">{profile.role}</span>
