@@ -4,7 +4,7 @@ An interactive 3D portfolio: a single WebGL "research facility" the camera flies
 
 | # | Station | 3D | Content |
 |---|---|---|---|
-| 01 | Core | Glass AI core with a turning neural lattice and pulsing heart, orbital data streams, editorial wordmark | Name, role, tagline, stats |
+| 01 | Core | Sahithi's avatar in front of the 3D wordmark, presenting a glass AI core (neural lattice, pulsing heart, orbital data streams) above her palm | Name, role, tagline, stats |
 | 02 | Identity | Layered neural network; layers light up as you read | Bio, education, focus areas |
 | 03 | Galaxy | Clickable constellation of skills grouped into systems | Each skill with the project/role/course that backs it |
 | 04 | Laboratory | Pedestal under a volumetric spotlight, one specimen per project | Six featured projects + full dossiers, GitHub-synced archive |

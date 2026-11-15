@@ -1,6 +1,6 @@
 import { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { SpotLight, Text } from '@react-three/drei';
+import { SpotLight, Text, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 import antonUrl from '@fontsource/anton/files/anton-latin-400-normal.woff?url';
 import { frame } from '../../lib/store';
@@ -156,11 +156,56 @@ function DataStreams() {
 }
 
 
+const AVATAR_URL = '/images/sahithi-avatar.webp';
+useTexture.preload(AVATAR_URL);
+
+// Avatar plane in world units (image is 626×1400). Palm measured on the image at u≈0.536, v≈0.552 from the top.
+const AVATAR_H = 5.5;
+const AVATAR_W = AVATAR_H * (626 / 1400);
+const AVATAR_Y = -0.25;
+const PALM = new THREE.Vector3((0.536 - 0.5) * AVATAR_W, AVATAR_Y + AVATAR_H / 2 - 0.552 * AVATAR_H, 0);
+
+/** Sahithi's avatar, standing in front of the wordmark; fades at the bottom edge and as the camera departs. */
+function Avatar({ fade }: { fade: React.RefObject<number> }) {
+  const tex = useTexture(AVATAR_URL);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 4;
+  const mat = useMemo(
+    () =>
+      new THREE.ShaderMaterial({
+        transparent: true,
+        depthWrite: false,
+        toneMapped: false,
+        uniforms: { uMap: { value: tex }, uOpacity: { value: 1 } },
+        vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
+        fragmentShader: `
+          uniform sampler2D uMap; uniform float uOpacity; varying vec2 vUv;
+          void main(){
+            vec4 c = texture2D(uMap, vUv);
+            // Soft fade into the floor so the cropped legs never show a hard edge.
+            float floorFade = smoothstep(0.0, 0.2, vUv.y);
+            gl_FragColor = vec4(c.rgb, c.a * floorFade * uOpacity);
+            #include <colorspace_fragment>
+          }`,
+      }),
+    [tex],
+  );
+  useFrame(() => {
+    mat.uniforms.uOpacity.value = fade.current ?? 1;
+  });
+  return (
+    <mesh material={mat} position={[0, AVATAR_Y, 0]} renderOrder={2}>
+      <planeGeometry args={[AVATAR_W, AVATAR_H]} />
+    </mesh>
+  );
+}
+
 export function CoreStation({ tier }: { tier: 'high' | 'low' }) {
   const core = useRef<THREE.Group>(null);
   const root = useRef<THREE.Group>(null);
   const word = useRef<THREE.Mesh>(null);
   const veil = useRef<THREE.ShaderMaterial>(null);
+  const avatarFade = useRef(1);
 
   const target = useMemo(() => {
     const o = new THREE.Object3D();
@@ -172,7 +217,9 @@ export function CoreStation({ tier }: { tier: 'high' | 'low' }) {
     const t = state.clock.elapsedTime;
     // As the camera departs, the wordmark dissolves and the core sinks into the floor.
     const leave = THREE.MathUtils.smoothstep(frame.t, 0.04, 0.4);
-    if (core.current) core.current.position.y = 0.25 + Math.sin(t * 0.6) * 0.08 - leave * 6;
+    // The core hovers just above her open palm.
+    if (core.current) core.current.position.y = PALM.y + 0.42 + Math.sin(t * 1.1) * 0.05 - leave * 6;
+    avatarFade.current = 1 - THREE.MathUtils.smoothstep(frame.t, 0.04, 0.3);
     const wm = word.current?.material as (THREE.Material & { opacity: number }) | undefined;
     if (wm) {
       wm.transparent = true;
@@ -211,7 +258,8 @@ export function CoreStation({ tier }: { tier: 'high' | 'low' }) {
         />
       </mesh>
 
-      <group ref={core} scale={1.15}>
+      <Avatar fade={avatarFade} />
+      <group ref={core} position={[PALM.x, PALM.y + 0.42, 0.45]} scale={0.22}>
         <AICore />
         <DataStreams />
       </group>
