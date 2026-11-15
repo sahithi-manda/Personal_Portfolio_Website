@@ -4,6 +4,8 @@ import { labs } from '../../content/labs';
 import { ArrowUpRight, Shell } from './common';
 
 const norm = (u: string) => u.toLowerCase().replace(/\/+$/, '');
+// README snippets can start with markdown ("> quote", "# heading", "**bold**").
+const cleanText = (t: string) => t.replace(/^[\s>#*_-]+/, '').replace(/\*\*|__/g, '');
 
 /** Every other public repository, kept in sync with GitHub by the existing pipeline. */
 export function Archive() {
@@ -45,7 +47,7 @@ export function Archive() {
                   <span className="block text-lg text-bone group-hover:text-accent">{p.title}</span>
                   <span className="mt-1 block text-sm text-mute sm:hidden">{p.tech.slice(0, 3).join(' · ')}</span>
                 </span>
-                <span className="hidden text-sm leading-relaxed text-mute sm:block">{p.description}</span>
+                <span className="hidden text-sm leading-relaxed text-mute sm:block">{cleanText(p.description)}</span>
                 <ArrowUpRight className="text-dim transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent" />
               </a>
             </li>
