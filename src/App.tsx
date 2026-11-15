@@ -1,6 +1,7 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { Header } from './ui/Header';
 import { Loader } from './ui/Loader';
+import { Intro } from './ui/Intro';
 import { useReveal } from './ui/useReveal';
 import { Hero } from './ui/sections/Hero';
 import { Identity } from './ui/sections/Identity';
@@ -10,7 +11,7 @@ import { Timeline } from './ui/sections/Timeline';
 import { Contact } from './ui/sections/Contact';
 import { frame, ui } from './lib/store';
 import { initSmoothScroll, initStationTracking, ScrollTrigger } from './lib/scroll';
-import { detectTier, hasWebGL, isSmallScreen, prefersReducedMotion, readSavedMode, saveMode, type Mode } from './lib/quality';
+import { detectTier, hasWebGL, isSmallScreen, prefersReducedMotion, readSavedMode, saveMode, shouldPlayIntro, type Mode } from './lib/quality';
 
 // The WebGL world is split out of the first paint.
 const Scene = lazy(() => import('./scene/Scene'));
@@ -27,6 +28,17 @@ export default function App() {
   const [compact, setCompact] = useState(isSmallScreen);
   const [reduced] = useState(prefersReducedMotion);
   const is3D = mode === '3d';
+  const [intro, setIntro] = useState(shouldPlayIntro);
+  const endIntro = useCallback(() => {
+    setIntro(false);
+    ui.set({ introDone: true });
+  }, []);
+
+  useEffect(() => {
+    if (!intro) ui.set({ introDone: true });
+    // Only on mount: whether this visit starts with the intro.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 767px)');
@@ -81,6 +93,8 @@ export default function App() {
           <div className="absolute inset-0 bg-gradient-to-b from-ink/30 via-ink/60 to-ink" />
         </div>
       )}
+
+      {intro && <Intro onDone={endIntro} />}
 
       <Header mode={mode} onToggleMode={toggle} canUse3D={webgl} />
 

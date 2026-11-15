@@ -104,7 +104,7 @@ export function Contact() {
         <footer className="mt-24 flex flex-col gap-3 border-t border-line pt-6 font-mono text-[10px] uppercase tracking-[0.18em] text-dim sm:flex-row sm:justify-between">
           <span>© {new Date().getFullYear()} {profile.fullName}</span>
           <span className="normal-case tracking-normal">
-            Head model based on the Lee Perry-Smith scan by{' '}
+            Face-scan specimen based on the Lee Perry-Smith scan by{' '}
             <a className="underline hover:text-bone" href="https://www.infinite-realities.net" target="_blank" rel="noopener noreferrer">
               Infinite Realities
             </a>{' '}

@@ -33,6 +33,11 @@ export function buildKeys(compact: boolean): CamKey[] {
     { pos: v(0, 0.4, -154 + back), look: v(0, 0.2, -168), dolly: v(0, 0, -1.2), fov: 38 },
   ];
   // Compact: face each object head-on so it sits centred behind the copy.
-  if (compact) keys.forEach((key) => (key.pos.x = key.look.x));
+  if (compact) {
+    keys.forEach((key) => (key.pos.x = key.look.x));
+    // Lift the hero avatar's face above the stacked name block.
+    keys[0].look.y = -0.7;
+    keys[0].pos.y = -0.5;
+  }
   return keys;
 }

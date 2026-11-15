@@ -6,10 +6,10 @@ export function Hero() {
   return (
     <section id="core" data-station="core" className="relative flex min-h-[115svh] flex-col" aria-labelledby="hero-name">
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[70%] bg-gradient-to-t from-ink/90 via-ink/50 to-transparent md:hidden" aria-hidden />
-      <Shell className="relative flex min-h-[100svh] flex-col justify-end pb-14 pt-28 sm:pb-16">
+      <Shell className="relative flex flex-col pb-14 pt-28 sm:pb-16 lg:min-h-[100svh] lg:justify-end">
         <div className="grid items-end gap-10 lg:grid-cols-12">
           {/* Identity block */}
-          <div className="max-w-xl lg:col-span-5">
+          <div className="flex min-h-[calc(100svh-9rem)] max-w-xl flex-col justify-end lg:col-span-5 lg:block lg:min-h-0">
             <p className="mb-3 font-sans text-2xl font-light italic text-bone/80 sm:text-3xl">Hello, I’m</p>
             <h1 id="hero-name" className="display text-[17vw] sm:text-8xl xl:text-[8.5rem]">
               Sahithi
@@ -18,7 +18,7 @@ export function Hero() {
             </h1>
             <p className="mt-5 font-mono text-sm uppercase tracking-[0.24em] text-accent">{profile.role}</p>
             <p className="mt-6 max-w-md text-[15px] leading-relaxed text-bone/75">{profile.tagline}</p>
-            <p className="mt-2 max-w-md text-[15px] leading-relaxed text-mute">
+            <p className="mt-2 hidden max-w-md text-[15px] leading-relaxed text-mute sm:block">
               B.Tech CSE (AI & ML) · machine learning, computer vision and applied NLP.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
