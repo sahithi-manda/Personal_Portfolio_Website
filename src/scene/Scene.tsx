@@ -86,7 +86,7 @@ export default function Scene({ tier, compact }: { tier: Tier; compact: boolean 
         <IdentityStation />
         <GalaxyStation />
         <LabStation tier={tier} />
-        <TimelineStation />
+        <TimelineStation compact={compact} />
         <SignalStation />
         <Effects tier={tier} />
         <Preload all />

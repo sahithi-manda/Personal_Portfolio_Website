@@ -2,12 +2,14 @@ import { useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { frame, ui } from '../lib/store';
-import { buildKeys } from './rig';
+import { buildKeys, timelinePose } from './rig';
 
 const tmpA = new THREE.Vector3();
 const tmpB = new THREE.Vector3();
 const tmpLookA = new THREE.Vector3();
 const tmpLookB = new THREE.Vector3();
+const tlPos = new THREE.Vector3();
+const tlLook = new THREE.Vector3();
 
 /** Flies the camera between station keys, adds hold-dolly, crane arc and pointer parallax. */
 export function CameraRig({ compact }: { compact: boolean }) {
@@ -16,6 +18,8 @@ export function CameraRig({ compact }: { compact: boolean }) {
   const pos = useRef(new THREE.Vector3().copy(keys[0].pos).add(new THREE.Vector3(0, 0.6, 9)));
   const look = useRef(new THREE.Vector3().copy(keys[0].look));
   const smoothT = useRef(0);
+  const tVel = useRef(0);
+  const smoothHold = useRef(0);
   const pointer = useRef(new THREE.Vector2());
   const intro = useRef(0);
   const last = useRef(new THREE.Vector3());
@@ -26,15 +30,30 @@ export function CameraRig({ compact }: { compact: boolean }) {
     if (ui.get().sceneReady && ui.get().introDone) intro.current = Math.min(1, intro.current + dt / 3.2);
     const introE = 1 - Math.pow(1 - intro.current, 4);
 
-    smoothT.current = (window as Window & { __snapCamera?: boolean }).__snapCamera
-      ? frame.t
-      : THREE.MathUtils.damp(smoothT.current, frame.t, 3.2, dt);
+    if ((window as Window & { __snapCamera?: boolean }).__snapCamera) {
+      smoothT.current = frame.t;
+      tVel.current = 0;
+    } else {
+      // Critically damped spring: no sudden starts or stops, no overshoot.
+      const omega = 2 / 0.55;
+      const x = omega * dt;
+      const exp = 1 / (1 + x + 0.48 * x * x + 0.235 * x * x * x);
+      const change = smoothT.current - frame.t;
+      const temp = (tVel.current + omega * change) * dt;
+      tVel.current = (tVel.current - omega * temp) * exp;
+      smoothT.current = frame.t + (change + temp) * exp;
+    }
+    frame.camT = smoothT.current;
+    smoothHold.current = THREE.MathUtils.damp(smoothHold.current, frame.hold, 2.5, dt);
+    frame.roleCam = (window as Window & { __snapCamera?: boolean }).__snapCamera
+      ? frame.roleT
+      : THREE.MathUtils.damp(frame.roleCam, frame.roleT, 2.6, dt);
     const t = THREE.MathUtils.clamp(smoothT.current, 0, keys.length - 1);
     const i = Math.min(Math.floor(t), keys.length - 2);
     const f = t - i;
     const a = keys[i];
     const b = keys[i + 1];
-    const holdA = f > 0.001 ? 1 : frame.hold;
+    const holdA = f > 0.001 ? THREE.MathUtils.lerp(smoothHold.current, 1, Math.min(1, f * 6)) : smoothHold.current;
 
     tmpA.copy(a.pos).addScaledVector(a.dolly, holdA);
     tmpB.copy(b.pos);
@@ -45,6 +64,13 @@ export function CameraRig({ compact }: { compact: boolean }) {
 
     tmpLookA.copy(a.look).addScaledVector(a.dolly, a.dolly.z < -10 ? holdA : 0);
     tmpLookB.copy(b.look);
+    // Experience: glide gate to gate with the card being read.
+    if (i === 4) {
+      timelinePose(frame.roleCam, compact, tlPos, tlLook);
+      tmpA.copy(tlPos).lerp(b.pos, f);
+      tmpA.y += Math.sin(f * Math.PI) * 1.4;
+      tmpLookA.copy(tlLook);
+    }
     tmpLookA.lerp(tmpLookB, f);
 
     // Intro: start further back and higher.

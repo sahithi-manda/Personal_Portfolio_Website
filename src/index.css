@@ -73,7 +73,7 @@ body {
 }
 /* Readability scrims between the 3D scene and copy */
 @utility scrim-left {
-  background: linear-gradient(90deg, rgb(5 6 8 / 0.92) 0%, rgb(5 6 8 / 0.7) 38%, rgb(5 6 8 / 0) 70%);
+  background: linear-gradient(90deg, rgb(5 6 8 / 0.94) 0%, rgb(5 6 8 / 0.86) 45%, rgb(5 6 8 / 0.4) 62%, rgb(5 6 8 / 0) 78%);
 }
 @utility scrim-full {
   background: rgb(5 6 8 / 0.72);

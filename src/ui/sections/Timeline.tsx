@@ -1,11 +1,62 @@
+import { useEffect, useRef } from 'react';
 import { certifications, roles } from '../../content/experience';
+import { frame, ui, useUI } from '../../lib/store';
 import { education } from '../../content/profile';
-import { SectionLabel, Shell } from './common';
+import { MobileScrim, SectionLabel, Shell } from './common';
+
+const smooth = (a: number, b: number, x: number) => {
+  const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
+  return t * t * (3 - 2 * t);
+};
+
+/** Tracks which card is being read; the 3D gates follow it. */
+function useRoleTracking(list: React.RefObject<HTMLOListElement | null>) {
+  useEffect(() => {
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const cards = list.current ? Array.from(list.current.children) as HTMLElement[] : [];
+      if (!cards.length) return;
+      const probe = window.innerHeight * 0.5;
+      const centers = cards.map((c) => {
+        const r = c.getBoundingClientRect();
+        return r.top + Math.min(r.height, window.innerHeight) * 0.5;
+      });
+      let t = 0;
+      if (probe >= centers[centers.length - 1]) t = centers.length - 1;
+      else if (probe > centers[0]) {
+        let k = 0;
+        while (probe > centers[k + 1]) k++;
+        // Pause on each card, then glide to the next gate.
+        t = k + smooth(0.2, 0.8, (probe - centers[k]) / (centers[k + 1] - centers[k]));
+      }
+      frame.roleT = t;
+      ui.set({ activeRole: Math.round(t) });
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      cancelAnimationFrame(raf);
+    };
+  }, [list]);
+}
 
 export function Timeline() {
+  const list = useRef<HTMLOListElement>(null);
+  const active = useUI((s) => s.activeRole);
+  useRoleTracking(list);
+  const card = (i: number) =>
+    `border bg-ink/80 p-6 backdrop-blur-md transition-colors duration-700 sm:p-8 ${i === active ? 'border-accent/60' : 'border-line'}`;
   return (
-    <section id="timeline" data-station="timeline" className="relative py-28" aria-labelledby="timeline-title">
+    <section id="timeline" data-station="timeline" data-hold-until="ol > li:last-child" className="relative pb-28 pt-[50svh] md:pt-28" aria-labelledby="timeline-title">
       <div className="scrim-left pointer-events-none absolute inset-0 hidden md:block" aria-hidden />
+      <MobileScrim />
       <Shell className="relative">
         <div className="max-w-xl">
           <SectionLabel index={5}>Timeline</SectionLabel>
@@ -17,9 +68,9 @@ export function Timeline() {
           </p>
         </div>
 
-        <ol className="mt-14 max-w-xl space-y-16">
+        <ol ref={list} className="mt-14 max-w-xl space-y-[22svh]">
           {roles.map((r, i) => (
-            <li key={r.company} className="border border-line bg-ink/80 p-6 backdrop-blur-md sm:p-8" data-reveal>
+            <li key={r.company} className={card(i)} data-reveal>
               <div className="flex items-start justify-between gap-4">
                 <span className="display text-6xl text-accent">{String(i + 1).padStart(2, '0')}</span>
                 <span className="mt-2 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-mute">
@@ -47,7 +98,7 @@ export function Timeline() {
             </li>
           ))}
 
-          <li className="border border-line bg-ink/80 p-6 backdrop-blur-md sm:p-8" data-reveal>
+          <li className={card(2)} data-reveal>
             <div className="flex items-start justify-between gap-4">
               <span className="display text-6xl text-accent">03</span>
               <span className="mt-2 font-mono text-[11px] uppercase tracking-[0.18em] text-mute">{education.period}</span>

@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { frame } from '../../lib/store';
 import { ACCENT } from '../palette';
 import { ANCHORS } from '../rig';
+import { applyPresence, presence } from '../presence';
 
 const LAYERS = [6, 10, 14, 10, 6];
 const SPACING = 1.55;
@@ -19,6 +20,7 @@ function rng(seed: number) {
 /** A layered neural network in 3D: glass-capped nodes, synapses with travelling signals. */
 export function IdentityStation() {
   const group = useRef<THREE.Group>(null);
+  const wrap = useRef<THREE.Group>(null);
   const nodes = useRef<THREE.InstancedMesh>(null);
   const shells = useRef<THREE.InstancedMesh>(null);
 
@@ -120,9 +122,9 @@ export function IdentityStation() {
   const active = useRef(0);
 
   useFrame((state, dt) => {
-    const near = Math.abs(frame.t - 1) < 0.92;
-    if (group.current) group.current.visible = near;
-    if (!near) return;
+    const k = presence(1);
+    applyPresence(wrap.current, k);
+    if (k <= 0.002) return;
     edgeMat.uniforms.uTime.value += dt;
     // Layers light up as the identity section is read.
     const target = Math.abs(frame.t - 1) < 0.5 ? 0.6 + frame.hold * LAYERS.length : frame.t < 1 ? 0 : LAYERS.length;
@@ -142,6 +144,8 @@ export function IdentityStation() {
 
   return (
     <group position={ANCHORS.identity}>
+      <group ref={wrap}>
+      <group scale={0.82} position-x={0.6}>
       <group ref={group}>
         <lineSegments geometry={edgeGeo} material={edgeMat} frustumCulled={false} />
         <instancedMesh ref={nodes} args={[undefined, undefined, total]}>
@@ -151,6 +155,8 @@ export function IdentityStation() {
         <instancedMesh ref={shells} args={[undefined, undefined, total]} material={shellMat}>
           <sphereGeometry args={[0.11, 24, 16]} />
         </instancedMesh>
+      </group>
+      </group>
       </group>
       <pointLight position={[0, 3, 3]} intensity={8} distance={12} color="#dfe8f0" />
     </group>

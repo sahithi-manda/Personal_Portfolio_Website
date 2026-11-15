@@ -1,74 +1,46 @@
-import { education, focusAreas, profile } from '../../content/profile';
-import { roles } from '../../content/experience';
-import { SectionLabel, Shell } from './common';
+import { focusAreas, profile } from '../../content/profile';
+import { MobileScrim, SectionLabel, Shell } from './common';
 
 export function Identity() {
   return (
-    <section id="identity" data-station="identity" className="relative min-h-[100svh] py-28" aria-labelledby="identity-title">
+    <section id="identity" data-station="identity" className="relative min-h-[100svh] pb-28 pt-[50svh] md:pt-28" aria-labelledby="identity-title">
       <div className="scrim-left pointer-events-none absolute inset-0 hidden md:block" aria-hidden />
+      <MobileScrim />
       <Shell className="relative">
         <div className="max-w-xl">
           <SectionLabel index={2}>AI identity</SectionLabel>
           <h2 id="identity-title" className="display mt-6 text-6xl sm:text-7xl" data-reveal>
             About me
           </h2>
-          <p className="display mt-8 text-3xl leading-tight text-accent sm:text-4xl" data-reveal>
+          <p className="display mt-7 text-3xl leading-tight text-accent sm:text-4xl" data-reveal>
             {profile.about.lead}
           </p>
-          <div className="mt-6 space-y-4">
-            {profile.about.paragraphs.map((p, i) => (
-              <p key={i} className={`leading-relaxed ${i === 0 ? 'text-lg text-bone/90' : 'text-[15px] text-bone/70'}`} data-reveal>
-                {p}
-              </p>
+          <p className="mt-5 text-[17px] leading-relaxed text-bone/85" data-reveal>
+            {profile.about.body}
+          </p>
+
+          <dl className="mt-10 border-t border-line" data-reveal>
+            {profile.about.facts.map((f) => (
+              <div key={f.label} className="grid grid-cols-[6.5rem_1fr] gap-4 border-b border-line py-3.5">
+                <dt className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent">{f.label}</dt>
+                <dd className="text-sm text-bone/85">{f.value}</dd>
+              </div>
             ))}
-          </div>
+          </dl>
 
-          {/* Education */}
-          <div className="mt-14" data-reveal>
-            <p className="eyebrow text-accent">Education</p>
-            <div className="mt-4 border-t border-line pt-5">
-              <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <h3 className="text-lg font-medium text-bone">{education.degree}</h3>
-                <span className="font-mono text-xs text-accent">{education.period}</span>
-              </div>
-              <p className="mt-1 text-sm text-mute">{education.school}</p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {education.coursework.map((c) => (
-                  <span key={c} className="chip">
-                    {c}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Focus areas: numbered, editorial */}
-          <div className="mt-14">
-            <p className="eyebrow text-accent" data-reveal>
-              What I work on
-            </p>
-            <ol className="mt-4">
+          <div className="mt-10" data-reveal>
+            <p className="eyebrow">Focus</p>
+            <ul className="mt-4 grid gap-px border border-line bg-line sm:grid-cols-2">
               {focusAreas.map((f, i) => (
-                <li key={f.id} className="grid grid-cols-[3rem_1fr] gap-x-4 border-t border-line py-5" data-reveal>
-                  <span className="display text-3xl text-accent">{String(i + 1).padStart(2, '0')}</span>
-                  <div>
-                    <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-bone">{f.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-mute">{f.body}</p>
-                  </div>
+                <li key={f.id} className="bg-ink/90 p-4">
+                  <p className="flex items-baseline gap-2">
+                    <span className="font-mono text-[10px] text-accent">{String(i + 1).padStart(2, '0')}</span>
+                    <span className="font-mono text-xs uppercase tracking-[0.18em] text-bone">{f.title}</span>
+                  </p>
+                  <p className="mt-1.5 text-[13px] leading-snug text-mute">{f.body}</p>
                 </li>
               ))}
-            </ol>
-          </div>
-
-          {/* Journey snapshot */}
-          <div className="mt-14 grid grid-cols-2 gap-px border border-line bg-line" data-reveal>
-            {roles.map((r) => (
-              <div key={r.company} className="bg-ink/90 p-5">
-                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-mute">{r.period}</p>
-                <p className="display mt-2 text-2xl">{r.company}</p>
-                <p className="mt-1 text-xs text-accent">{r.role}</p>
-              </div>
-            ))}
+            </ul>
           </div>
         </div>
       </Shell>

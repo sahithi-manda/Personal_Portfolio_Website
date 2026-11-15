@@ -216,17 +216,17 @@ export function CoreStation({ tier }: { tier: 'high' | 'low' }) {
   useFrame((state) => {
     const t = state.clock.elapsedTime;
     // As the camera departs, the wordmark dissolves and the core sinks into the floor.
-    const leave = THREE.MathUtils.smoothstep(frame.t, 0.04, 0.4);
+    const leave = THREE.MathUtils.smoothstep(frame.camT, 0.04, 0.4);
     // The core hovers just above her open palm.
     if (core.current) core.current.position.y = PALM.y + 0.42 + Math.sin(t * 1.1) * 0.05 - leave * 6;
-    avatarFade.current = 1 - THREE.MathUtils.smoothstep(frame.t, 0.04, 0.3);
+    avatarFade.current = 1 - THREE.MathUtils.smoothstep(frame.camT, 0.04, 0.3);
     const wm = word.current?.material as (THREE.Material & { opacity: number }) | undefined;
     if (wm) {
       wm.transparent = true;
-      wm.opacity = 1 - THREE.MathUtils.smoothstep(frame.t, 0.02, 0.22);
+      wm.opacity = 1 - THREE.MathUtils.smoothstep(frame.camT, 0.02, 0.22);
     }
-    if (veil.current) veil.current.uniforms.uFade.value = 1 - THREE.MathUtils.smoothstep(frame.t, 0.02, 0.22);
-    if (root.current) root.current.visible = frame.t < 0.6;
+    if (veil.current) veil.current.uniforms.uFade.value = 1 - THREE.MathUtils.smoothstep(frame.camT, 0.02, 0.22);
+    if (root.current) root.current.visible = frame.camT < 0.75;
   });
 
   return (
