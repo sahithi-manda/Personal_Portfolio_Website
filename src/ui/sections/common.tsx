@@ -29,3 +29,11 @@ export function ArrowUpRight({ className = '' }: { className?: string }) {
 export const Shell = ({ children, className = '' }: { children: ReactNode; className?: string }) => (
   <div className={`mx-auto w-full max-w-[1600px] px-4 sm:px-8 lg:pl-40 lg:pr-12 xl:pl-48 ${className}`}>{children}</div>
 );
+
+/** Phones: keeps the top of each section clear as a window onto the 3D scene, then fades to ink behind the copy. */
+export const MobileScrim = () => (
+  <div aria-hidden className="pointer-events-none absolute inset-0 md:hidden">
+    <div className="absolute inset-x-0 top-[34svh] h-[22svh] bg-gradient-to-b from-transparent to-ink/90" />
+    <div className="absolute inset-x-0 bottom-0 top-[56svh] bg-ink/90" />
+  </div>
+);

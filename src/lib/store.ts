@@ -14,6 +14,10 @@ export const frame = {
   t: 0,
   /** Camera's smoothed station position (what is actually on screen). */
   camT: 0,
+  /** Experience: continuous index of the card being read (0 = IStudio, 1 = Labmentix, 2 = B.Tech). */
+  roleT: 0,
+  /** Camera-smoothed roleT. */
+  roleCam: 0,
   /** Progress within the current station's hold (0..1), for slow dollies. */
   hold: 0,
   pointer: { x: 0, y: 0 },
@@ -24,6 +28,7 @@ export const frame = {
 interface UIState {
   station: number;
   activeLab: number;
+  activeRole: number;
   selectedSkill: string | null;
   hoveredSkill: string | null;
   sceneReady: boolean;
@@ -34,6 +39,7 @@ interface UIState {
 let state: UIState = {
   station: 0,
   activeLab: 0,
+  activeRole: 0,
   selectedSkill: 'python',
   hoveredSkill: null,
   sceneReady: false,

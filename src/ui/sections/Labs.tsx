@@ -35,9 +35,9 @@ export function Labs({ is3D }: { is3D: boolean }) {
   return (
     <section id="lab" data-station="lab" className="relative" aria-labelledby="lab-title">
       <div ref={track} style={{ height: `${labs.length * 80 + 100}svh` }} className="relative">
-        <div className="sticky top-0 flex h-[100svh] items-center overflow-hidden">
+        <div className="sticky top-0 flex h-[100svh] items-end overflow-hidden pb-8 md:items-center md:pb-0">
           <div className="scrim-left pointer-events-none absolute inset-0 hidden md:block" aria-hidden />
-          <div className="scrim-full pointer-events-none absolute inset-0 md:hidden" aria-hidden />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[68%] bg-gradient-to-t from-ink via-ink/92 to-transparent md:hidden" aria-hidden />
           <Shell className="relative">
             <div className="grid gap-10 lg:grid-cols-12">
               <div className="lg:col-span-6 xl:col-span-5">
@@ -57,22 +57,22 @@ export function Labs({ is3D }: { is3D: boolean }) {
                     aria-live="polite"
                   >
                     <div className="flex items-baseline gap-4">
-                      <span className="display text-6xl text-accent sm:text-7xl">{String(active + 1).padStart(2, '0')}</span>
+                      <span className="display text-5xl text-accent sm:text-7xl">{String(active + 1).padStart(2, '0')}</span>
                       <span className="eyebrow">
                         {lab.code} · {lab.kicker}
                       </span>
                     </div>
-                    <h3 className="display mt-4 text-5xl sm:text-6xl">{lab.title}</h3>
-                    <p className="mt-5 max-w-lg text-[15px] leading-relaxed text-bone/80">{lab.overview}</p>
+                    <h3 className="display mt-3 text-4xl sm:mt-4 sm:text-6xl">{lab.title}</h3>
+                    <p className="mt-4 line-clamp-3 max-w-lg text-sm leading-relaxed text-bone/80 sm:mt-5 sm:line-clamp-none sm:text-[15px]">{lab.overview}</p>
                     <div className="mt-6 flex flex-wrap gap-2">
-                      {lab.stack.map((t) => (
-                        <span key={t} className="chip">
+                      {lab.stack.map((t, ti) => (
+                        <span key={t} className={`chip ${ti >= 4 ? 'hidden sm:inline-flex' : ''}`}>
                           {t}
                         </span>
                       ))}
                     </div>
                     {lab.results && (
-                      <dl className="mt-6 flex flex-wrap gap-x-8 gap-y-3">
+                      <dl className="mt-6 hidden flex-wrap gap-x-8 gap-y-3 sm:flex">
                         {lab.results.map((r) => (
                           <div key={r.label}>
                             <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-mute">{r.label}</dt>
@@ -81,7 +81,7 @@ export function Labs({ is3D }: { is3D: boolean }) {
                         ))}
                       </dl>
                     )}
-                    <div className="mt-8 flex flex-wrap gap-3">
+                    <div className="mt-6 flex flex-wrap gap-3 sm:mt-8">
                       <button className="btn-primary" onClick={() => setOpen(lab)}>
                         Open dossier <Arrow />
                       </button>

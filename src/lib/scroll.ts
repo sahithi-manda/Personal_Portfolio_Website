@@ -50,36 +50,61 @@ const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
 
 /**
  * Maps document scroll to a continuous station coordinate.
- * While a section fills the viewport the camera "holds" at its station
- * (with a slow dolly), then flies to the next one as the section leaves.
+ * Each section has an "arrive" point (its top reaches the middle of the screen)
+ * and a "hold until" point (by default about a screen before its end, or the
+ * centre of the element named in data-hold-until). The camera holds between
+ * the two, then flies on an S-curve to the next section's arrive point, so a
+ * flight can carry across the boundary instead of being squeezed into it.
  */
 export function initStationTracking() {
-  let sections: HTMLElement[] = [];
-  let tops: number[] = [];
-  let heights: number[] = [];
+  let arrive: number[] = [];
+  let holdEnd: number[] = [];
 
   const measure = () => {
-    sections = STATIONS.map((id) => document.querySelector<HTMLElement>(`[data-station="${id}"]`)).filter(
+    const vh = window.innerHeight;
+    const sections = STATIONS.map((id) => document.querySelector<HTMLElement>(`[data-station="${id}"]`)).filter(
       (el): el is HTMLElement => !!el,
     );
-    tops = sections.map((s) => s.getBoundingClientRect().top + window.scrollY);
-    heights = sections.map((s) => s.offsetHeight);
+    const abs = (el: Element) => el.getBoundingClientRect().top + window.scrollY;
+    arrive = sections.map((s, i) => (i === 0 ? -Infinity : abs(s) + vh * 0.25));
+    holdEnd = sections.map((s, i) => {
+      const top = abs(s);
+      const bottom = top + s.offsetHeight;
+      const sel = s.dataset.holdUntil;
+      const anchor = sel ? s.querySelector<HTMLElement>(sel) : null;
+      if (anchor) {
+        const r = anchor.getBoundingClientRect();
+        return abs(anchor) + Math.min(r.height, vh) * 0.5 + vh * 0.1;
+      }
+      // Hero holds for the first ~10% of a screen of scrolling.
+      return i === 0 ? top + vh * 0.6 : Math.max(top + vh * 0.5, bottom - vh * 0.6);
+    });
+    // Leave at least ~0.9 of a screen of scrolling for every flight.
+    const maxProbe = document.documentElement.scrollHeight - vh * 0.5 - 2;
+    for (let i = 0; i < arrive.length - 1; i++) {
+      if (arrive[i + 1] - holdEnd[i] < vh * 0.9) arrive[i + 1] = holdEnd[i] + vh * 0.9;
+      // Every station must be reachable, even at the very bottom of the page.
+      arrive[i + 1] = Math.min(arrive[i + 1], maxProbe);
+      holdEnd[i] = Math.min(holdEnd[i], arrive[i + 1] - vh * 0.3);
+    }
   };
 
   const update = () => {
-    if (!sections.length) return;
-    const vh = window.innerHeight;
-    const probe = window.scrollY + vh * 0.5;
+    if (!arrive.length) return;
+    const probe = window.scrollY + window.innerHeight * 0.5;
     let i = 0;
-    while (i < sections.length - 1 && probe >= tops[i + 1]) i++;
-    const frac = clamp01((probe - tops[i]) / Math.max(1, heights[i]));
-    // Travel window: the last part of a section (scaled so short sections still travel smoothly).
-    // Fly over roughly the last screen of each section (at least 45% of it), so travel is unhurried.
-    const travelStart = Math.min(0.55, Math.max(0.2, 1 - vh / heights[i]));
-    const move = i < sections.length - 1 ? ease(clamp01((frac - travelStart) / (1 - travelStart))) : 0;
-    frame.t = i + move;
-    frame.hold = clamp01(frac / Math.max(0.01, travelStart));
-    ui.set({ station: Math.round(frame.t) });
+    while (i < arrive.length - 1 && probe >= arrive[i + 1]) i++;
+    let t = i;
+    let hold = 1;
+    if (probe < holdEnd[i]) {
+      const from = Number.isFinite(arrive[i]) ? arrive[i] : holdEnd[i] - window.innerHeight;
+      hold = clamp01((probe - from) / Math.max(1, holdEnd[i] - from));
+    } else if (i < arrive.length - 1) {
+      t = i + ease(clamp01((probe - holdEnd[i]) / Math.max(1, arrive[i + 1] - holdEnd[i])));
+    }
+    frame.t = t;
+    frame.hold = hold;
+    ui.set({ station: Math.round(t) });
   };
 
   measure();
