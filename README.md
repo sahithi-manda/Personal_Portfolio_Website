@@ -4,7 +4,7 @@ An interactive 3D portfolio: a single WebGL "research facility" the camera flies
 
 | # | Station | 3D | Content |
 |---|---|---|---|
-| 01 | Core | Black-chrome android head, glass goggles, scan band, orbital data streams, editorial wordmark | Name, role, tagline, stats |
+| 01 | Core | Glass AI core with a turning neural lattice and pulsing heart, orbital data streams, editorial wordmark | Name, role, tagline, stats |
 | 02 | Identity | Layered neural network; layers light up as you read | Bio, education, focus areas |
 | 03 | Galaxy | Clickable constellation of skills grouped into systems | Each skill with the project/role/course that backs it |
 | 04 | Laboratory | Pedestal under a volumetric spotlight, one specimen per project | Six featured projects + full dossiers, GitHub-synced archive |
@@ -59,4 +59,4 @@ Public repositories under `VITE_GITHUB_USERNAME` (default `sahithi-manda`) appea
 
 ## Credits
 
-The android head is based on the Lee Perry-Smith head scan by [Infinite Realities](https://www.infinite-realities.net), licensed [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/), restyled (neck cut, materials, goggles and collar added in code).
+The face-scan point cloud in the Laboratory (LAB-01) uses the Lee Perry-Smith head scan by [Infinite Realities](https://www.infinite-realities.net), licensed [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/).
