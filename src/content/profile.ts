@@ -13,10 +13,15 @@ export const profile = {
   githubHandle: 'sahithi-manda',
   linkedin: 'https://www.linkedin.com/in/sahithi-reddy-manda-0a218732b',
   resume: '/Sahithi_Reddy_resume.pdf',
-  summary:
-    'Third-year B.Tech Computer Science student specialising in Artificial Intelligence and Machine Learning, with hands-on experience in machine learning, computer vision, data analysis and AI application development through internships and academic projects.',
-  intent:
-    'I build practical AI systems end to end: from cleaning the data and choosing the model, to measuring it honestly and shipping something people can use.',
+  about: {
+    lead: 'I build AI that works outside the notebook.',
+    paragraphs: [
+      'I’m an AI / ML engineer who loves the whole journey of a model: from messy raw data, to the right architecture, to a tool real people can actually use. Turning an idea into a working intelligent system is the part of engineering that excites me most.',
+      'I’ve built a face-recognition attendance system with at-risk analytics, implemented eigenfaces from first principles, trained recurrent networks to forecast stock prices, and shipped an NLP résumé analyser that reads a CV the way screening software does.',
+      'At IStudio I research AI agents, large language models and retrieval-augmented generation while helping develop and test ML solutions. At Labmentix I turned raw customer data into clear, decision-ready insight through careful cleaning, analysis and visualisation.',
+      'I care about honest evaluation, clean engineering and clear communication: measuring what a model really does, and explaining it so anyone can trust it. I’m always learning, and I’m excited to bring that energy to a team building AI that matters.',
+    ],
+  },
 };
 
 export const stats = [

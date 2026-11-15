@@ -4,7 +4,7 @@ import { SectionLabel, Shell } from './common';
 
 export function Timeline() {
   return (
-    <section id="timeline" data-station="timeline" className="relative min-h-[260svh] py-32" aria-labelledby="timeline-title">
+    <section id="timeline" data-station="timeline" className="relative py-28" aria-labelledby="timeline-title">
       <div className="scrim-left pointer-events-none absolute inset-0 hidden md:block" aria-hidden />
       <Shell className="relative">
         <div className="max-w-xl">
@@ -17,7 +17,7 @@ export function Timeline() {
           </p>
         </div>
 
-        <ol className="mt-[30svh] max-w-xl space-y-[38svh]">
+        <ol className="mt-14 max-w-xl space-y-16">
           {roles.map((r, i) => (
             <li key={r.company} className="border border-line bg-ink/80 p-6 backdrop-blur-md sm:p-8" data-reveal>
               <div className="flex items-start justify-between gap-4">

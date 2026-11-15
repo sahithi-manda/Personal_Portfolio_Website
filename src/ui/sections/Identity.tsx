@@ -4,7 +4,7 @@ import { SectionLabel, Shell } from './common';
 
 export function Identity() {
   return (
-    <section id="identity" data-station="identity" className="relative min-h-[170svh] py-32" aria-labelledby="identity-title">
+    <section id="identity" data-station="identity" className="relative min-h-[100svh] py-28" aria-labelledby="identity-title">
       <div className="scrim-left pointer-events-none absolute inset-0 hidden md:block" aria-hidden />
       <Shell className="relative">
         <div className="max-w-xl">
@@ -12,12 +12,16 @@ export function Identity() {
           <h2 id="identity-title" className="display mt-6 text-6xl sm:text-7xl" data-reveal>
             About me
           </h2>
-          <p className="mt-8 text-lg leading-relaxed text-bone/85" data-reveal>
-            {profile.summary}
+          <p className="display mt-8 text-3xl leading-tight text-accent sm:text-4xl" data-reveal>
+            {profile.about.lead}
           </p>
-          <p className="mt-4 text-[15px] leading-relaxed text-mute" data-reveal>
-            {profile.intent}
-          </p>
+          <div className="mt-6 space-y-4">
+            {profile.about.paragraphs.map((p, i) => (
+              <p key={i} className={`leading-relaxed ${i === 0 ? 'text-lg text-bone/90' : 'text-[15px] text-bone/70'}`} data-reveal>
+                {p}
+              </p>
+            ))}
+          </div>
 
           {/* Education */}
           <div className="mt-14" data-reveal>

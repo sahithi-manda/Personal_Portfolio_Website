@@ -12,7 +12,7 @@ export function Skills({ is3D }: { is3D: boolean }) {
   const skill = skills.find((s) => s.id === shownId) ?? skills[0];
 
   return (
-    <section id="galaxy" data-station="galaxy" className="relative min-h-[150svh] py-32" aria-labelledby="skills-title">
+    <section id="galaxy" data-station="galaxy" className="relative min-h-[100svh] py-28" aria-labelledby="skills-title">
       <div className="scrim-left pointer-events-none absolute inset-0 hidden md:block" aria-hidden />
       <Shell className="relative">
         <div className="grid gap-12 lg:grid-cols-12">
