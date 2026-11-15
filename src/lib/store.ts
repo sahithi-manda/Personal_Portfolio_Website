@@ -12,6 +12,8 @@ export type StationId = (typeof STATIONS)[number];
 export const frame = {
   /** Continuous station position: 0 = core … 5 = signal. */
   t: 0,
+  /** Camera's smoothed station position (what is actually on screen). */
+  camT: 0,
   /** Progress within the current station's hold (0..1), for slow dollies. */
   hold: 0,
   pointer: { x: 0, y: 0 },

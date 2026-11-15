@@ -7,10 +7,13 @@ gsap.registerPlugin(ScrollTrigger);
 
 let lenis: Lenis | null = null;
 
+const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
 /** Smooth scrolling (Lenis) driven by GSAP's ticker so ScrollTrigger stays in sync. */
 export function initSmoothScroll(enabled: boolean) {
   if (!enabled || lenis) return () => {};
-  lenis = new Lenis({ duration: 1.15, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+  // Lerp-based smoothing feels softer and more continuous than fixed-duration wheel tweens.
+  lenis = new Lenis({ lerp: 0.075, wheelMultiplier: 0.9, touchMultiplier: 1.1, smoothWheel: true });
   lenis.on('scroll', ScrollTrigger.update);
   const tick = (time: number) => lenis?.raf(time * 1000);
   gsap.ticker.add(tick);
@@ -32,16 +35,17 @@ export function lockScroll(locked: boolean) {
 export function scrollToId(id: string) {
   const el = document.getElementById(id);
   if (!el) return;
-  if (lenis) lenis.scrollTo(el, { duration: 1.8 });
+  if (lenis) lenis.scrollTo(el, { duration: 2.2, easing: easeInOutCubic });
   else el.scrollIntoView({ behavior: 'smooth' });
 }
 
 export function scrollToY(y: number) {
-  if (lenis) lenis.scrollTo(y, { duration: 1.2 });
+  if (lenis) lenis.scrollTo(y, { duration: 1.4, easing: easeInOutCubic });
   else window.scrollTo({ top: y, behavior: 'smooth' });
 }
 
-const ease = (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+// Gentle S-curve: flights start and land softly.
+const ease = (x: number) => -(Math.cos(Math.PI * x) - 1) / 2;
 const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
 
 /**
@@ -70,7 +74,8 @@ export function initStationTracking() {
     while (i < sections.length - 1 && probe >= tops[i + 1]) i++;
     const frac = clamp01((probe - tops[i]) / Math.max(1, heights[i]));
     // Travel window: the last part of a section (scaled so short sections still travel smoothly).
-    const travelStart = heights[i] > vh * 1.4 ? 1 - (vh * 0.6) / heights[i] : 0.55;
+    // Fly over roughly the last screen of each section (at least 45% of it), so travel is unhurried.
+    const travelStart = Math.min(0.55, Math.max(0.2, 1 - vh / heights[i]));
     const move = i < sections.length - 1 ? ease(clamp01((frac - travelStart) / (1 - travelStart))) : 0;
     frame.t = i + move;
     frame.hold = clamp01(frac / Math.max(0.01, travelStart));

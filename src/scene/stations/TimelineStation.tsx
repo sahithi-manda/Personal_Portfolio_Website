@@ -7,6 +7,7 @@ import monoUrl from '@fontsource/jetbrains-mono/files/jetbrains-mono-latin-500-n
 import { frame } from '../../lib/store';
 import { ACCENT } from '../palette';
 import { ANCHORS } from '../rig';
+import { presence } from '../presence';
 
 const GATES = [
   { z: -8, w: 5.6, h: 3.6, year: '2026', title: 'ISTUDIO', sub: 'AI/ML INTERN · MAR 2026 — PRESENT', major: true },
@@ -63,7 +64,10 @@ function Gate({ g, i }: { g: (typeof GATES)[number]; i: number }) {
 export function TimelineStation() {
   const root = useRef<THREE.Group>(null);
   useFrame(() => {
-    if (root.current) root.current.visible = frame.t > 3.1 && frame.t < 5.3;
+    if (!root.current) return;
+    const k = Math.max(presence(4, 0.6, 1.0), frame.camT > 4 && frame.camT < 4.6 ? 1 : 0);
+    root.current.visible = k > 0.002;
+    root.current.scale.setScalar(0.85 + 0.15 * k);
   });
   return (
     <group position={ANCHORS.timeline} ref={root}>

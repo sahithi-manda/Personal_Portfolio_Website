@@ -7,6 +7,7 @@ import { frame, ui, useUI } from '../../lib/store';
 import { skills, systems, type Skill, type SkillSystem } from '../../content/skills';
 import { ACCENT } from '../palette';
 import { ANCHORS } from '../rig';
+import { applyPresence, presence } from '../presence';
 
 const SYSTEM_ORDER = Object.keys(systems) as SkillSystem[];
 
@@ -112,6 +113,7 @@ function Star({ p, glass, focusSystem }: { p: Placed; glass: THREE.Material; foc
 /** Interactive constellation of technologies, grouped into systems. */
 export function GalaxyStation() {
   const group = useRef<THREE.Group>(null);
+  const wrap = useRef<THREE.Group>(null);
   const { placed, hubs } = useMemo(() => layout(), []);
   const selectedId = useUI((s) => s.selectedSkill);
   const selectedSystem = skills.find((s) => s.id === selectedId)?.system;
@@ -151,9 +153,9 @@ export function GalaxyStation() {
 
   useFrame((state, dt) => {
     if (!group.current) return;
-    const near = Math.abs(frame.t - 2) < 0.92;
-    group.current.visible = near;
-    if (!near) return;
+    const k = presence(2);
+    applyPresence(wrap.current, k);
+    if (k <= 0.002) return;
     group.current.rotation.y += dt * 0.03;
     group.current.rotation.x = THREE.MathUtils.damp(group.current.rotation.x, 0.18 + frame.pointer.y * 0.1, 2, dt);
     void state;
@@ -161,6 +163,7 @@ export function GalaxyStation() {
 
   return (
     <group position={ANCHORS.galaxy}>
+      <group ref={wrap}>
       <group ref={group}>
         {/* Galactic core */}
         <mesh>
@@ -195,6 +198,7 @@ export function GalaxyStation() {
         {placed.map((p) => (
           <Star key={p.skill.id} p={p} glass={glass} focusSystem={selectedSystem} />
         ))}
+      </group>
       </group>
       <pointLight position={[0, 2, 4]} intensity={10} distance={14} color="#e7eef4" />
     </group>

@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { frame } from '../../lib/store';
 import { ACCENT } from '../palette';
 import { ANCHORS } from '../rig';
+import { applyPresence, presence } from '../presence';
 
 const PULSES = 5;
 
@@ -25,9 +26,12 @@ export function SignalStation() {
 
   useFrame((state, dt) => {
     if (!root.current) return;
-    const near = frame.t > 4.2;
-    root.current.visible = near;
-    if (!near) return;
+    const k = presence(5, 0.3, 0.9);
+    applyPresence(root.current, k, 0.8);
+    root.current.position.x = ANCHORS.signal.x;
+    root.current.position.z = ANCHORS.signal.z;
+    root.current.position.y = ANCHORS.signal.y + (1 - k) * -0.8;
+    if (k <= 0.002) return;
     const t = state.clock.elapsedTime;
     if (ring.current) {
       ring.current.rotation.z += dt * 0.08;

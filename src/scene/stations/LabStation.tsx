@@ -6,6 +6,7 @@ import { frame, useUI } from '../../lib/store';
 import { labs, type SpecimenKind } from '../../content/labs';
 import { ACCENT } from '../palette';
 import { ANCHORS } from '../rig';
+import { applyPresence, presence } from '../presence';
 import { Eigen, FaceScan, OcrScan, ResumeMatch, Sorting, TimeSeries } from './specimens';
 import { useMaterials } from './materials';
 
@@ -56,8 +57,10 @@ export function LabStation({ tier }: { tier?: 'high' | 'low' }) {
 
   useFrame((state) => {
     if (!root.current) return;
-    const near = Math.abs(frame.t - 3) < 0.92;
-    root.current.visible = near;
+    const k = presence(3);
+    applyPresence(root.current, k, 0.8);
+    root.current.position.copy(ANCHORS.lab);
+    root.current.position.y += (1 - k) * -0.8;
     if (ring.current) ring.current.opacity = 0.55 + Math.sin(state.clock.elapsedTime * 2) * 0.2;
   });
 
