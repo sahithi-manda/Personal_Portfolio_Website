@@ -79,6 +79,7 @@ export const labs: Lab[] = [
       { label: 'Dataset', value: '450 images', note: '100×100 grayscale' },
       { label: 'Components', value: 'k = 20' },
       { label: 'Test accuracy', value: '40.6%', note: '60/40 split, from the notebook' },
+      { label: 'Re-runs', value: '44–49%', note: 'MLP unseeded; chance is 11.1%' },
     ],
     honestNote:
       'Accuracy is a baseline. Natural next steps are whitening, more components and an SVM comparison.',
@@ -107,6 +108,7 @@ export const labs: Lab[] = [
       'Code panel in Python and TypeScript highlights the executing line.',
       'Vitest suite covers edge cases: empty, duplicates, reversed, single element, negatives.',
     ],
+    results: [{ label: 'Unit tests', value: '39 passing', note: 'Vitest' }],
     github: gh('Smart_DSA_Visualizer'),
   },
   {
@@ -187,5 +189,85 @@ export const labs: Lab[] = [
     honestNote:
       'On this split the simpler RNN outperformed the LSTM: a useful reminder that more model capacity is not automatically better.',
     github: gh('Tesla-Stock-Price-Prediction'),
+  },
+  {
+    id: 'interview',
+    code: 'LAB-07',
+    title: 'AI Interview Intelligence Platform',
+    kicker: 'LLM · Full-stack',
+    specimen: 'resume',
+    overview:
+      'A deployed mock-interview platform: it parses a resume and job description, matches skills, generates tailored questions with Gemini and scores the answers.',
+    problem:
+      'Generic interview prep ignores the gap between a specific candidate and a specific role. Each step needs structured, reliable LLM output, not free text.',
+    stack: ['Python', 'FastAPI', 'Gemini API', 'PostgreSQL', 'SQLAlchemy', 'React', 'TypeScript', 'pytest'],
+    architecture: [
+      { label: 'Parse', detail: 'PyPDF2 / python-docx extract resume text; Gemini builds a structured candidate profile.' },
+      { label: 'Match', detail: 'Job description analysis and skill matching produce a gap report.' },
+      { label: 'Interview', detail: 'Question generation, answer evaluation and follow-ups, all JSON-mode output validated by Pydantic.' },
+      { label: 'Serve', detail: 'FastAPI (11 routers, JWT + bcrypt) on Render; React frontend on Vercel.' },
+    ],
+    implementation: [
+      '9 Gemini modules, each with a response schema and model_validate_json validation.',
+      'SQLAlchemy models with Alembic migrations on PostgreSQL (Supabase).',
+      '12-page React 19 + TypeScript frontend with Recharts analytics.',
+      'pytest API tests mock the LLM calls to cover auth and the full resume-to-interview pipeline.',
+    ],
+    results: [{ label: 'Backend tests', value: '4 / 4', note: 'pytest, LLM calls mocked' }],
+    github: gh('AI_Interview_Intelligence_Platform'),
+    live: 'https://ai-interview-intelligence-platform-mocha.vercel.app/',
+  },
+  {
+    id: 'emipredict',
+    code: 'LAB-08',
+    title: 'EMIPredict AI',
+    kicker: 'ML · Classification + Regression',
+    specimen: 'timeseries',
+    overview:
+      'Predicts loan eligibility and the maximum affordable EMI from an applicant profile, served in a multi-page Streamlit app.',
+    problem:
+      'Lenders need two answers per applicant (lend or not, and how much monthly repayment is sustainable), and the eligible class is a 22% minority.',
+    stack: ['Python', 'scikit-learn', 'Pandas', 'Streamlit', 'joblib'],
+    architecture: [
+      { label: 'Data', detail: '2,500 synthetic applicants (seeded generator), 8 features, 22% eligible.' },
+      { label: 'Pipeline', detail: 'ColumnTransformer (scaling + one-hot) shared by training and inference.' },
+      { label: 'Models', detail: 'Logistic Regression vs Random Forest; Linear Regression vs Random Forest.' },
+      { label: 'Serve', detail: 'Streamlit app with risk bands, a loan-capacity calculator and feature importances.' },
+    ],
+    implementation: [
+      'Selected Logistic Regression on F1, not accuracy, because of class imbalance.',
+      'The forest was more precise but missed 47% of eligible applicants.',
+      'Random Forest regressor cut MAE 42% compared with linear regression.',
+    ],
+    results: [
+      { label: 'Eligibility F1', value: '73.6%', note: 'accuracy 89.8%' },
+      { label: 'EMI R²', value: '0.819', note: 'MAE ₹3,577' },
+    ],
+    honestNote: 'Labels come from known rules on synthetic data, so the scores show how well the models recover those rules, not real-world lending performance.',
+    github: gh('EMI_Prediction_Project'),
+  },
+  {
+    id: 'housing',
+    code: 'LAB-09',
+    title: 'California House Prices',
+    kicker: 'ML · Regression',
+    specimen: 'timeseries',
+    overview: 'Predicts district median house value from 1990 census features and serves the model in Streamlit.',
+    problem: 'House value depends non-linearly on income and location, which a linear model cannot capture.',
+    stack: ['Python', 'scikit-learn', 'Pandas', 'Seaborn', 'Streamlit'],
+    architecture: [
+      { label: 'Data', detail: '20,640 districts, 8 features, no missing values.' },
+      { label: 'Models', detail: 'Linear Regression baseline vs Random Forest, tuned with GridSearchCV.' },
+      { label: 'Serve', detail: 'train.py rebuilds the model; the app trains it on first run.' },
+    ],
+    implementation: [
+      'Median income is the strongest single predictor (r = 0.69).',
+      'Tuning added little over the default forest; the gain comes from the model family.',
+    ],
+    results: [
+      { label: 'Tuned RF R²', value: '0.804', note: 'RMSE ≈ $50.6k' },
+      { label: 'Linear R²', value: '0.576', note: 'RMSE ≈ $74.6k' },
+    ],
+    github: gh('House-Price-Predictor'),
   },
 ];
