@@ -98,3 +98,115 @@ dialog::backdrop {
   background: rgb(3 4 5 / 0.82);
   backdrop-filter: blur(4px);
 }
+
+/* ---------------------------------------------------------------------------
+   Lab reel: cinematic 3D project navigation
+   Card transforms are written per frame from ScrollTrigger (see Labs.tsx);
+   only transform/opacity/filter change, so everything stays on the compositor.
+--------------------------------------------------------------------------- */
+.reel-stage {
+  touch-action: pan-y;
+}
+/* Shared perspective (one vanishing point) but no shared 3D context:
+   cards stack strictly by z-index, so planes never intersect or bleed through. */
+.reel-plane {
+  position: absolute;
+  inset: 0;
+  perspective: 1400px;
+  perspective-origin: 50% 45%;
+}
+.reel-card {
+  --w: clamp(240px, 27vw, 400px);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--w);
+  aspect-ratio: 16 / 11;
+  margin-left: calc(var(--w) / -2);
+  margin-top: calc(var(--w) * -11 / 32);
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+.reel-inner {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  background:
+    radial-gradient(120% 90% at 85% 0%, rgb(92 200 255 / 0.10), transparent 60%),
+    linear-gradient(160deg, #10151a 0%, #07090b 70%);
+  box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.9);
+  transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transition:
+    transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 0.4s,
+    box-shadow 0.4s;
+  cursor: pointer;
+}
+.reel-card[data-active='true'] .reel-inner {
+  border-color: rgb(92 200 255 / 0.55);
+  box-shadow:
+    0 0 0 1px rgb(92 200 255 / 0.15),
+    0 40px 90px -30px rgb(92 200 255 / 0.35);
+}
+.reel-card[data-launch='true'] .reel-inner {
+  transform: translateZ(260px) scale(1.18);
+  border-color: var(--color-accent);
+  transition-duration: 0.45s;
+}
+/* light sweep across the active card */
+.reel-card[data-active='true'] .reel-inner::after {
+  content: '';
+  position: absolute;
+  inset: -40% auto -40% -60%;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgb(92 200 255 / 0.12), transparent);
+  transform: skewX(-18deg);
+  animation: reel-sheen 3.6s cubic-bezier(0.6, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+@keyframes reel-sheen {
+  0%, 35% { left: -60%; }
+  75%, 100% { left: 130%; }
+}
+.reel-ghost {
+  position: absolute;
+  right: -0.06em;
+  bottom: -0.18em;
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 9vw, 8.5rem);
+  line-height: 1;
+  color: rgb(233 237 240 / 0.05);
+  pointer-events: none;
+}
+.reel-motif {
+  position: absolute;
+  right: 6%;
+  top: 10%;
+  width: 52%;
+  height: auto;
+  opacity: 0.9;
+}
+.motif-pulse { animation: motif-pulse 2.4s ease-in-out infinite; }
+.motif-scan { animation: motif-scan 3s ease-in-out infinite alternate; }
+.motif-sweep { animation: motif-sweep 3.2s ease-in-out infinite alternate; }
+.motif-draw { stroke-dasharray: 260; animation: motif-draw 4s ease-in-out infinite alternate; }
+@keyframes motif-pulse { 50% { opacity: 0.45; } }
+@keyframes motif-scan { to { transform: translateY(72px); } }
+@keyframes motif-sweep { to { transform: translateX(134px); } }
+@keyframes motif-draw { from { stroke-dashoffset: 260; } to { stroke-dashoffset: 0; } }
+
+.reel-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  background: radial-gradient(60% 60% at 60% 50%, rgb(92 200 255 / 0.28), transparent 70%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reel-inner, .reel-card[data-launch='true'] .reel-inner { transition: none; transform: none; }
+  .reel-card[data-active='true'] .reel-inner::after,
+  .motif-pulse, .motif-scan, .motif-sweep, .motif-draw { animation: none; }
+}
